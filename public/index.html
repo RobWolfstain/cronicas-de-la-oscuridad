@@ -51,7 +51,7 @@
             z-index: -1;
             background-image: 
                 linear-gradient(to bottom, rgba(3, 5, 8, 0.75), rgba(3, 5, 8, 0.9)),
-                url('./fondo-bosque.avif');
+                url('./fondo.jpeg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -144,7 +144,7 @@
 
     <!-- Navegación Superior Definitiva -->
     <nav class="border-b border-grafito/50 bg-carbon/95 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between relative min-h-[65px]">
+        <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between relative min-h-[75px]">
             
             <!-- Izquierda: Perfil / Ingreso -->
             <div class="flex items-center gap-2 justify-start z-10">
@@ -166,12 +166,10 @@
                 <button id="btn-login" class="bg-grafito hover:bg-zinc/20 text-marfil px-3 py-1.5 rounded transition border border-grafito text-xs font-inter">Ingresar</button>
             </div>
 
-            <!-- Centro: Título Gigante, Sangrante y Centrado Absoluto Real -->
-            <div class="absolute left-1/2 -translate-x-1/2 flex items-center justify-center gap-2 cursor-pointer hover:opacity-90 transition group text-center z-0 pointer-events-auto" onclick="mostrarInicio()">
-                <div class="flex flex-col leading-none items-center">
-                    <span class="texto-sangre text-2xl sm:text-4xl md:text-5xl text-red-600 uppercase tracking-widest drop-shadow-[0_3px_12px_rgba(255,0,0,0.6)]">Crónicas</span>
-                    <span class="font-cinzel text-[8px] sm:text-[11px] text-marfil tracking-[0.25em] uppercase font-bold opacity-90 mt-1">de la Oscuridad</span>
-                </div>
+            <!-- Centro: LOGO PANORÁMICO INTEGRADO -->
+            <!-- Se eliminaron los textos restrictivos de antes. Se lee directamente "logo.png" y se adapta al ancho de forma fluida sin deformarse -->
+            <div class="absolute left-1/2 -translate-x-1/2 flex items-center justify-center cursor-pointer hover:scale-105 transition-all duration-300 z-0 pointer-events-auto h-full max-w-[50%] md:max-w-[60%]" onclick="mostrarInicio()">
+                <img id="header-logo" src="./logo.png" alt="Crónicas de la Oscuridad" class="h-14 sm:h-20 md:h-24 w-auto max-w-full object-contain filter drop-shadow-[0_0_15px_rgba(139,28,28,0.4)]">
             </div>
 
             <!-- Derecha: Botones de Acción -->
@@ -192,12 +190,25 @@
         
         <!-- PANTALLA PRINCIPAL: Feed -->
         <div id="vista-feed" class="space-y-12 animate-fade-in">
-            <div id="relato-destacado-container">
-                <div class="bg-grafito/30 backdrop-blur-sm border border-grafito p-8 rounded-xl animate-pulse h-64 flex items-center justify-center">
-                    <span class="text-grafito material-icons text-4xl">hourglass_empty</span>
+            
+            <!-- Nueva Sección Superior: Historia de la Semana y Escritor del Mes -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Historia de la Semana -->
+                <div id="historia-semana-container" class="lg:col-span-2">
+                    <div class="bg-grafito/30 backdrop-blur-sm border border-grafito p-8 rounded-xl animate-pulse h-full min-h-[250px] flex items-center justify-center">
+                        <span class="text-grafito material-icons text-4xl">hourglass_empty</span>
+                    </div>
+                </div>
+                
+                <!-- Escritor del Mes -->
+                <div id="escritor-mes-container" class="lg:col-span-1">
+                    <div class="bg-grafito/30 backdrop-blur-sm border border-grafito p-8 rounded-xl animate-pulse h-full min-h-[250px] flex items-center justify-center">
+                        <span class="text-grafito material-icons text-4xl">hourglass_empty</span>
+                    </div>
                 </div>
             </div>
 
+            <!-- Resto de historias -->
             <div>
                 <div class="flex justify-between items-end border-b border-grafito/50 pb-2 mb-6">
                     <h3 class="font-cinzel text-xl text-marfil uppercase tracking-widest">Archivos Abiertos</h3>
@@ -563,7 +574,7 @@
         };
 
         // ==========================================
-        // LÓGICA DE REACCIONES (LIKES / LOVES / DISLIKES)
+        // LÓGICA DE REACCIONES (LIKES / LOVES / DISLIKES) Y CONTADORES
         // ==========================================
         function generarHTMLReacciones(relato, contexto) {
             const uid = auth.currentUser ? auth.currentUser.uid : null;
@@ -838,7 +849,8 @@
 
         window.cargarRelatosInicio = async () => {
             const grid = document.getElementById('historias-grid');
-            const destacadoContainer = document.getElementById('relato-destacado-container');
+            const historiaSemanaContainer = document.getElementById('historia-semana-container');
+            const escritorMesContainer = document.getElementById('escritor-mes-container');
             const contador = document.getElementById('contador-manuscritos');
             
             try {
@@ -856,61 +868,139 @@
                 contador.textContent = `${relatosCargados.length} manuscrito${relatosCargados.length !== 1 ? 's' : ''}`;
 
                 if (relatosCargados.length === 0) {
-                    destacadoContainer.innerHTML = `
-                        <div class="bg-grafito/30 backdrop-blur-sm border border-grafito p-10 rounded-xl text-center animate-fade-in">
+                    historiaSemanaContainer.innerHTML = `
+                        <div class="bg-grafito/30 backdrop-blur-sm border border-grafito p-10 rounded-xl text-center animate-fade-in flex flex-col items-center justify-center h-full min-h-[250px]">
                             <span class="material-icons text-5xl text-grafito mb-2">auto_stories</span>
                             <h2 class="font-cinzel text-xl text-marfil">El grimorio está vacío</h2>
                             <p class="text-sm text-gray-500 font-inter mt-2">Sé el primero en sellar un relato en la oscuridad.</p>
                         </div>`;
+                    escritorMesContainer.innerHTML = '';
                     grid.innerHTML = '';
                     return;
                 }
 
-                const destacado = relatosCargados[0];
                 const rolL = rolUsuarioActual.toLowerCase();
                 const esSuperAdminSupremoActual = auth.currentUser && auth.currentUser.email && auth.currentUser.email.toLowerCase() === 'jesus.robledo.c@gmail.com';
                 const esAdmin = rolL.includes('admin') || rolL.includes('super') || esSuperAdminSupremoActual;
-                const esDuenoDestacado = auth.currentUser && (auth.currentUser.uid === destacado.autorId || esAdmin);
+
+                // ==========================================
+                // LÓGICA: CALENDARIO EXACTO 
+                // ==========================================
+                const now = new Date();
                 
-                const bgImagen = destacado.portadaUrl ? `background-image: url('${destacado.portadaUrl}'); background-size: cover; background-position: center; opacity: 0.15;` : `background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); opacity: 0.1;`;
-                const imgDestacadaHtml = destacado.portadaUrl 
-                    ? `<img src="${destacado.portadaUrl}" alt="Portada" class="w-28 h-40 md:w-36 md:h-52 object-cover rounded-md border border-grafito/50 shadow-2xl shrink-0">` 
+                // 1. Semana Pasada (Lunes a Domingo)
+                const currentDay = now.getDay();
+                const diffToMonday = (currentDay === 0 ? -6 : 1) - currentDay; 
+                const inicioEstaSemana = new Date(now);
+                inicioEstaSemana.setDate(now.getDate() + diffToMonday);
+                inicioEstaSemana.setHours(0, 0, 0, 0);
+
+                const inicioSemanaPasada = new Date(inicioEstaSemana);
+                inicioSemanaPasada.setDate(inicioEstaSemana.getDate() - 7);
+
+                // 2. Mes Pasado (Día 1 al último día)
+                const inicioEsteMes = new Date(now.getFullYear(), now.getMonth(), 1);
+                const inicioMesPasado = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+                // Normalización de fechas de base de datos
+                relatosCargados.forEach(r => {
+                    r.dateObj = r.fecha ? r.fecha.toDate() : new Date();
+                    r.score = (r.reacciones?.likes?.length || 0) + (r.reacciones?.loves?.length || 0); 
+                });
+
+                // --- HISTORIA DESTACADA / DE LA SEMANA PASADA ---
+                let relatosSemanaPasada = relatosCargados.filter(r => r.dateObj >= inicioSemanaPasada && r.dateObj < inicioEstaSemana);
+                let historiaDestacada = null;
+                let etiquetaSemana = "RELATO RECIENTE";
+
+                if (relatosSemanaPasada.length > 0) {
+                    // Busca el de mayor puntaje. Si todos tienen 0, agarra el primero.
+                    historiaDestacada = relatosSemanaPasada.reduce((max, r) => r.score > max.score ? r : max);
+                    if (historiaDestacada.score > 0) {
+                        etiquetaSemana = "HISTORIA DE LA SEMANA PASADA";
+                    }
+                } else {
+                    // Si no hay de la semana pasada, usamos el relato más reciente en general.
+                    historiaDestacada = relatosCargados[0];
+                }
+
+                const esDuenoDestacado = auth.currentUser && (auth.currentUser.uid === historiaDestacada.autorId || esAdmin);
+                const bgImagenDestacada = historiaDestacada.portadaUrl ? `background-image: url('${historiaDestacada.portadaUrl}'); background-size: cover; background-position: center; opacity: 0.2;` : `background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); opacity: 0.1;`;
+                const imgDestacadaHtml = historiaDestacada.portadaUrl 
+                    ? `<img src="${historiaDestacada.portadaUrl}" alt="Portada" class="w-28 h-40 md:w-36 md:h-52 object-cover rounded-md border border-grafito/50 shadow-2xl shrink-0">` 
                     : '';
                 
-                let htmlDestacado = `
-                    <div class="bg-gradient-to-br from-grafito/60 to-carbon/90 border border-grafito p-8 rounded-xl relative overflow-hidden group cursor-pointer backdrop-blur-[2px]" onclick="abrirRelato('${destacado.id}', event)">
-                        <div class="absolute inset-0 mix-blend-overlay transition duration-700 group-hover:scale-105 group-hover:opacity-40" style="${bgImagen}"></div>
-                        <div class="relative z-10 flex flex-col sm:flex-row gap-6 items-center sm:items-start">
+                historiaSemanaContainer.innerHTML = `
+                    <div class="bg-gradient-to-br from-grafito/60 to-carbon/90 border border-grafito p-8 rounded-xl relative overflow-hidden group cursor-pointer backdrop-blur-[2px] h-full flex flex-col" onclick="abrirRelato('${historiaDestacada.id}', event)">
+                        <div class="absolute inset-0 mix-blend-overlay transition duration-700 group-hover:scale-105 group-hover:opacity-40" style="${bgImagenDestacada}"></div>
+                        <div class="relative z-10 flex flex-col sm:flex-row gap-6 items-center sm:items-start flex-grow">
                             ${imgDestacadaHtml}
-                            <div class="flex-1 w-full">
+                            <div class="flex-1 w-full flex flex-col h-full">
                                 <div class="flex items-center justify-between mb-4">
                                     <div class="flex items-center gap-3">
-                                        <span class="text-xs font-inter bg-red-950/30 border border-red-900/40 text-red-400 px-3 py-1 rounded flex items-center gap-1"><span class="material-icons text-xs">star</span> RELATO RECIENTE</span>
-                                        <span class="text-xs text-gray-400 font-inter uppercase tracking-wider">${destacado.genero}</span>
-                                        ${destacado.esAdulto ? '<span class="text-xs text-red-500 font-inter border border-red-500/30 bg-red-500/10 px-2 py-0.5 rounded flex items-center gap-1"><span class="material-icons text-[12px]">warning</span> +18</span>' : ''}
+                                        <span class="text-xs font-inter bg-red-950/40 border border-red-900/50 text-red-400 px-3 py-1 rounded flex items-center gap-1"><span class="material-icons text-xs">emoji_events</span> ${etiquetaSemana}</span>
+                                        <span class="text-xs text-gray-400 font-inter uppercase tracking-wider">${historiaDestacada.genero}</span>
+                                        ${historiaDestacada.esAdulto ? '<span class="text-xs text-red-500 font-inter border border-red-500/30 bg-red-500/10 px-2 py-0.5 rounded flex items-center gap-1"><span class="material-icons text-[12px]">warning</span> +18</span>' : ''}
                                     </div>
-                                    ${esDuenoDestacado ? `<button onclick="event.stopPropagation(); prepararEdicionRelato('${destacado.id}')" class="text-red-400 hover:text-marfil text-xs bg-carbon/80 border border-red-900/40 px-2.5 py-1 rounded flex items-center gap-1 transition z-20 cursor-pointer" title="Modificar Manuscrito"><span class="material-icons text-xs">edit</span> Editar</button>` : ''}
+                                    ${esDuenoDestacado ? `<button onclick="event.stopPropagation(); prepararEdicionRelato('${historiaDestacada.id}')" class="text-red-400 hover:text-marfil text-xs bg-carbon/80 border border-red-900/40 px-2.5 py-1 rounded flex items-center gap-1 transition z-20 cursor-pointer" title="Modificar Manuscrito"><span class="material-icons text-xs">edit</span> Editar</button>` : ''}
                                 </div>
-                                <h2 class="font-cinzel text-3xl md:text-4xl text-marfil group-hover:text-red-500 transition mb-4 uppercase tracking-wide drop-shadow-lg">${destacado.titulo}</h2>
-                                <p class="text-lg text-gray-300 max-w-3xl mb-8 font-inter leading-relaxed line-clamp-2 drop-shadow-md">${destacado.contenido}</p>
+                                <h2 class="font-cinzel text-3xl md:text-4xl text-marfil group-hover:text-red-500 transition mb-4 uppercase tracking-wide drop-shadow-lg">${historiaDestacada.titulo}</h2>
+                                <p class="text-lg text-gray-300 max-w-3xl mb-8 font-inter leading-relaxed line-clamp-2 drop-shadow-md flex-grow">${historiaDestacada.contenido}</p>
                                 
-                                <div class="flex justify-between items-end border-t border-grafito/50 pt-4">
+                                <div class="flex justify-between items-end border-t border-grafito/50 pt-4 mt-auto">
                                     <div>
-                                        <p class="text-sm text-marfil font-inter font-medium drop-shadow">${destacado.autorNombre}</p>
+                                        <p class="text-sm text-marfil font-inter font-medium drop-shadow">${historiaDestacada.autorNombre}</p>
                                     </div>
-                                    <div id="reacciones-grid-${destacado.id}" class="flex items-center gap-4 text-gray-400/80">
-                                        ${generarHTMLReacciones(destacado, 'grid')}
+                                    <div id="reacciones-grid-${historiaDestacada.id}-destacado" class="flex items-center gap-4 text-gray-400/80">
+                                        ${generarHTMLReacciones(historiaDestacada, 'grid')}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 `;
-                destacadoContainer.innerHTML = htmlDestacado;
 
+                // --- ESCRITOR DEL MES PASADO ---
+                let relatosMesPasado = relatosCargados.filter(r => r.dateObj >= inicioMesPasado && r.dateObj < inicioEsteMes);
+                let etiquetaMes = "ESCRITOR DEL MES PASADO";
+                if (relatosMesPasado.length === 0) {
+                    relatosMesPasado = relatosCargados; // Fallback histórico
+                    etiquetaMes = "ESCRITOR DESTACADO";
+                }
+
+                const autoresMap = {};
+                relatosMesPasado.forEach(r => {
+                    if (!autoresMap[r.autorNombre]) autoresMap[r.autorNombre] = { nombre: r.autorNombre, score: 0 };
+                    autoresMap[r.autorNombre].score += r.score;
+                });
+
+                let escritorMes = { nombre: "Aún no hay leyendas", score: 0 };
+                let maxAutorScore = -1;
+                for (const autor in autoresMap) {
+                    if(autoresMap[autor].score > maxAutorScore) {
+                        maxAutorScore = autoresMap[autor].score;
+                        escritorMes = autoresMap[autor];
+                    }
+                }
+
+                escritorMesContainer.innerHTML = `
+                    <div class="bg-gradient-to-b from-red-950/40 to-carbon/90 border border-red-900/50 p-6 rounded-xl relative overflow-hidden flex flex-col items-center justify-center text-center h-full backdrop-blur-[2px]">
+                        <div class="absolute inset-0 mix-blend-overlay opacity-20" style="background-image: url('https://www.transparenttextures.com/patterns/black-scales.png');"></div>
+                        <div class="relative z-10 flex flex-col items-center h-full justify-center w-full">
+                            <span class="material-icons text-6xl text-red-600 mb-4 drop-shadow-[0_0_12px_rgba(255,0,0,0.5)] mt-auto">workspace_premium</span>
+                            <h3 class="font-cinzel text-sm sm:text-base text-marfil uppercase tracking-widest mb-2 opacity-80">${etiquetaMes}</h3>
+                            <p class="font-fell text-3xl md:text-4xl text-red-500 font-bold italic mb-6 drop-shadow-md break-words">${escritorMes.nombre}</p>
+                            <div class="bg-carbon/80 border border-red-900/40 px-4 py-2 rounded-lg inline-flex items-center justify-center gap-2 shadow-xl mb-auto">
+                                <span class="material-icons text-red-500 text-sm">auto_awesome</span>
+                                <span class="font-inter text-sm text-gray-300"><b>${escritorMes.score}</b> Reacciones a su favor</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // --- RENDERIZAR RESTO DEL GRID (Sin saltar la historia destacada) ---
                 let htmlGrid = '';
-                for (let i = 1; i < relatosCargados.length; i++) {
-                    const relato = relatosCargados[i];
+                relatosCargados.forEach(relato => {
                     const esDuenoGrid = auth.currentUser && (auth.currentUser.uid === relato.autorId || esAdmin);
                     const thumbHtml = relato.portadaUrl 
                         ? `<img src="${relato.portadaUrl}" class="w-full h-32 object-cover rounded-t-md mb-3 border-b border-grafito/50 opacity-80 group-hover:opacity-100 transition duration-500">` 
@@ -925,7 +1015,7 @@
                                         <span class="text-xs font-inter border border-red-900/30 text-red-400 px-2 py-1 rounded uppercase tracking-wider">${relato.genero}</span>
                                         <div class="flex items-center gap-2">
                                             ${relato.esAdulto ? '<span class="material-icons text-red-500/70 text-sm" title="Contenido +18">warning</span>' : ''}
-                                            ${esDuenoGrid ? `<button onclick="event.stopPropagation(); prepararEdicionRelato('${relato.id}')" class="text-red-400 hover:text-marfil text-xs bg-carbon/80 border border-red-900/40 px-2 py-0.5 rounded flex items-center gap-1 transition z-20 cursor-pointer" title="Modificar Manuscrito"><span class="material-icons text-[12px]">edit</span></button>` : ''}
+                                            ${esDuenoGrid ? `<button onclick="event.stopPropagation(); prepararEdicionRelato('${relato.id}')" class="text-red-400 hover:text-marfil text-xs bg-carbon/80 border border-red-900/40 px-2.5 py-0.5 rounded flex items-center gap-1 transition z-20 cursor-pointer" title="Modificar Manuscrito"><span class="material-icons text-[12px]">edit</span></button>` : ''}
                                         </div>
                                     </div>
                                     <h4 class="font-cinzel text-lg text-marfil mb-2 uppercase group-hover:text-red-500 transition">${relato.titulo}</h4>
@@ -943,7 +1033,7 @@
                             </div>
                         </div>
                     `;
-                }
+                });
                 grid.innerHTML = htmlGrid;
             } catch (error) {
                 console.error("Error al cargar los relatos:", error);
