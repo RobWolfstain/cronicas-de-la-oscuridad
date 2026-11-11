@@ -643,16 +643,31 @@
         window.prepararNuevoRelato = async () => {
             relatoActualId = null;
             relatoActualData = null;
-            document.getElementById('form-escribir').reset();
-            document.getElementById('input-relato-id').value = '';
-            btnEliminarRelato.classList.add('hidden');
-            document.getElementById('escribir-titulo-panel').innerHTML = '<span class="material-icons text-vela">history_edu</span> Redactar Manuscrito';
-            document.getElementById('btn-guardar-relato').innerHTML = '<span class="material-icons text-vela">history_edu</span> Sellar y Enviar al Purgatorio';
-            document.getElementById('btn-guardar-top').innerHTML = '<span class="material-icons text-sm">save</span> Sellar';
+
+            // Ocultar vistas y mostrar la de escritura para asegurar que el DOM esté renderizado
+            ocultarTodo();
+            const vistaEscribir = document.getElementById('vista-escribir');
+            if (vistaEscribir) vistaEscribir.classList.remove('hidden');
+
+            const formEscribir = document.getElementById('form-escribir');
+            if (formEscribir) formEscribir.reset();
+
+            const inputRelatoId = document.getElementById('input-relato-id');
+            if (inputRelatoId) inputRelatoId.value = '';
+
+            const btnEliminar = document.getElementById('btn-eliminar-relato');
+            if (btnEliminar) btnEliminar.classList.add('hidden');
+
+            const panelTitulo = document.getElementById('escribir-titulo-panel');
+            if (panelTitulo) panelTitulo.innerHTML = '<span class="material-icons text-vela">history_edu</span> Redactar Manuscrito';
+
+            const btnGuardarBot = document.getElementById('btn-guardar-relato');
+            if (btnGuardarBot) btnGuardarBot.innerHTML = '<span class="material-icons text-vela">history_edu</span> Sellar y Enviar al Purgatorio';
+
+            const btnGuardarTop = document.getElementById('btn-guardar-top');
+            if (btnGuardarTop) btnGuardarTop.innerHTML = '<span class="material-icons text-sm">save</span> Sellar';
             
             await llenarCatalogoSeudónimos(seudonimoActual);
-            ocultarTodo();
-            document.getElementById('vista-escribir').classList.remove('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
