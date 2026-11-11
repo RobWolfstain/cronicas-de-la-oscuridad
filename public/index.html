@@ -106,8 +106,8 @@
             <form id="form-seudonimo" class="flex flex-col gap-6">
                 <input type="text" id="input-seudonimo" required placeholder="Tu seudónimo..." class="w-full bg-transparent border-b-2 border-sepia/50 p-2 text-carmesi font-cinzel font-bold text-2xl text-center focus:outline-none focus:border-carmesi transition placeholder-sepia/50">
                 <div class="flex justify-center mt-2">
-                    <button type="submit" class="bg-tinta hover:bg-black text-vela px-8 py-4 rounded transition font-cinzel font-bold tracking-widest text-lg shadow-lg border border-vela/30 flex justify-center items-center gap-2">
-                        <span class="material-icons text-vela">history_edu</span> Firmar en el Registro
+                    <button type="submit" class="bg-tinta hover:bg-black text-red-800 px-8 py-4 rounded transition font-cinzel font-bold tracking-widest text-lg shadow-lg border border-vela/30 flex justify-center items-center gap-2">
+                        <span class="material-icons text-red-800">history_edu</span> Firmar en el Registro
                     </button>
                 </div>
             </form>
@@ -118,7 +118,7 @@
     <div id="backdrop-menu" class="fixed inset-0 z-[90] bg-black/70 backdrop-blur-sm hidden transition-opacity duration-300" onclick="cerrarMenuLateral()"></div>
     <div id="menu-lateral" class="fixed top-0 right-0 z-[95] w-72 h-full bg-carbon border-l border-grafito shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col p-6">
         <div class="flex justify-between items-center border-b border-grafito pb-4 mb-6">
-            <span class="font-cinzel text-vela font-bold uppercase tracking-wider text-sm">Menú de Oscuridad</span>
+            <span class="font-cinzel text-red-800 font-bold uppercase tracking-wider text-sm">Menú de Oscuridad</span>
             <button onclick="cerrarMenuLateral()" class="text-gray-400 hover:text-marfil transition">
                 <span class="material-icons">close</span>
             </button>
@@ -145,7 +145,7 @@
                     <img id="user-avatar" src="" alt="Avatar" class="w-8 h-8 rounded-full border border-grafito shadow-sm cursor-pointer" onclick="document.getElementById('btn-logout').classList.toggle('hidden')">
                     <div class="hidden sm:flex flex-col text-left">
                         <span id="user-name" class="text-xs font-inter text-marfil font-medium"></span>
-                        <span id="user-role" class="text-[10px] text-vela font-inter">Lector</span>
+                        <span id="user-role" class="text-[10px] text-red-800 font-inter">Lector</span>
                     </div>
                     <button id="btn-logout" class="hidden absolute top-10 left-0 bg-grafito border border-vela/30 text-xs text-red-400 hover:text-red-300 px-3 py-1.5 rounded shadow-lg transition z-50 whitespace-nowrap">Cerrar Sesión</button>
                 </div>
@@ -154,9 +154,9 @@
 
             <!-- Centro: Título Centrado Absoluto -->
             <div class="flex items-center justify-center gap-2 cursor-pointer hover:text-marfil transition group text-center" onclick="mostrarInicio()">
-                <span class="material-icons text-vela text-2xl sm:text-3xl">candle</span>
+                <span class="material-icons text-red-800 text-2xl sm:text-3xl">candle</span>
                 <div class="flex flex-col leading-tight items-center">
-                    <h1 class="font-cinzel text-xs sm:text-base font-bold text-vela uppercase tracking-wider">Crónicas</h1>
+                    <h1 class="font-cinzel text-xs sm:text-base font-bold text-red-800 uppercase tracking-wider">Crónicas</h1>
                     <span class="text-marfil font-cinzel text-[9px] sm:text-xs tracking-widest uppercase opacity-90">de la Oscuridad</span>
                 </div>
             </div>
@@ -199,11 +199,11 @@
         <!-- PANTALLA SECUNDARIA: LECTOR (PERGAMINO) -->
         <div id="vista-lector" class="hidden max-w-5xl mx-auto w-full pb-20 animate-fade-in mt-6 cursor-pointer">
             <div class="flex justify-between items-center mb-10 border-b border-grafito pb-4 cursor-default">
-                <button onclick="mostrarInicio()" class="text-gray-400 hover:text-vela font-inter text-sm flex items-center gap-2 transition bg-carbon/80 px-3 py-1.5 rounded border border-grafito backdrop-blur-sm">
+                <button onclick="mostrarInicio()" class="text-gray-400 hover:text-red-800 font-inter text-sm flex items-center gap-2 transition bg-carbon/80 px-3 py-1.5 rounded border border-grafito backdrop-blur-sm">
                     <span class="material-icons text-sm">arrow_back</span> Regresar al Inicio
                 </button>
                 <div id="lector-acciones-admin" class="hidden flex gap-3">
-                    <button id="btn-editar-desde-lector" class="text-vela hover:text-marfil font-inter text-sm flex items-center gap-1 transition bg-carbon/80 px-3 py-1.5 rounded border border-vela/30">
+                    <button id="btn-editar-desde-lector" class="text-red-800 hover:text-marfil font-inter text-sm flex items-center gap-1 transition bg-carbon/80 px-3 py-1.5 rounded border border-vela/30">
                         <span class="material-icons text-sm">edit</span> Editar Relato
                     </button>
                 </div>
@@ -242,14 +242,14 @@
         <!-- PANTALLA CREACIÓN / EDICIÓN: REDACTAR MANUSCRITO -->
         <div id="vista-escribir" class="hidden max-w-4xl mx-auto w-full pb-20 animate-fade-in mt-6">
             <div class="flex justify-between items-center mb-8 border-b border-grafito pb-4">
-                <button onclick="mostrarInicio()" class="text-gray-400 hover:text-vela font-inter text-sm flex items-center gap-2 transition bg-carbon/80 px-3 py-1.5 rounded border border-grafito backdrop-blur-sm">
+                <button onclick="mostrarInicio()" class="text-gray-400 hover:text-red-800 font-inter text-sm flex items-center gap-2 transition bg-carbon/80 px-3 py-1.5 rounded border border-grafito backdrop-blur-sm">
                     <span class="material-icons text-sm">arrow_back</span> Regresar al Inicio
                 </button>
                 <div class="flex gap-4 items-center">
                     <button type="button" id="btn-eliminar-relato" onclick="destruirRelatoActual()" class="hidden bg-red-950/40 hover:bg-red-900/60 text-red-400 border border-red-500/30 px-3 py-1.5 rounded transition flex items-center gap-1 font-inter text-sm" title="Destruir este manuscrito">
                         <span class="material-icons text-sm">delete_forever</span> <span class="hidden sm:inline">Eliminar</span>
                     </button>
-                    <button type="submit" form="form-escribir" id="btn-guardar-top" class="bg-vela/10 hover:bg-vela/20 text-vela border border-vela/30 px-3 py-1.5 rounded transition flex items-center gap-2 font-inter text-sm font-medium shadow-[0_0_10px_rgba(212,175,55,0.1)] disabled:opacity-50">
+                    <button type="submit" form="form-escribir" id="btn-guardar-top" class="bg-vela/10 hover:bg-vela/20 text-red-800 border border-vela/30 px-3 py-1.5 rounded transition flex items-center gap-2 font-inter text-sm font-medium shadow-[0_0_10px_rgba(212,175,55,0.1)] disabled:opacity-50">
                         <span class="material-icons text-sm">save</span> Sellar
                     </button>
                 </div>
@@ -300,8 +300,8 @@
                 </div>
 
                 <div class="flex justify-center pt-6">
-                    <button type="submit" id="btn-guardar-relato" class="bg-tinta hover:bg-black text-vela px-12 py-5 rounded transition flex items-center gap-3 font-cinzel font-bold tracking-widest text-lg shadow-2xl disabled:opacity-50 border border-vela/30">
-                        <span class="material-icons text-vela">history_edu</span> Sellar y Enviar al Purgatorio
+                    <button type="submit" id="btn-guardar-relato" class="bg-tinta hover:bg-black text-red-800 px-12 py-5 rounded transition flex items-center gap-3 font-cinzel font-bold tracking-widest text-lg shadow-2xl disabled:opacity-50 border border-vela/30">
+                        <span class="material-icons text-red-800">history_edu</span> Sellar y Enviar al Purgatorio
                     </button>
                 </div>
             </form>
@@ -309,15 +309,15 @@
 
         <div id="vista-usuarios" class="hidden animate-fade-in mt-6">
             <div class="flex justify-between items-center mb-8 border-b border-grafito pb-4">
-                <h2 class="font-cinzel text-2xl text-marfil uppercase tracking-widest flex items-center gap-2"><span class="material-icons text-vela">settings</span> Configuración</h2>
-                <button onclick="mostrarInicio()" class="text-gray-400 hover:text-vela font-inter text-sm flex items-center gap-2 transition bg-carbon/80 px-3 py-1.5 rounded border border-grafito backdrop-blur-sm">
+                <h2 class="font-cinzel text-2xl text-marfil uppercase tracking-widest flex items-center gap-2"><span class="material-icons text-red-800">settings</span> Configuración</h2>
+                <button onclick="mostrarInicio()" class="text-gray-400 hover:text-red-800 font-inter text-sm flex items-center gap-2 transition bg-carbon/80 px-3 py-1.5 rounded border border-grafito backdrop-blur-sm">
                     <span class="material-icons text-sm">arrow_back</span> Regresar al Inicio
                 </button>
             </div>
             
             <div class="bg-grafito/30 backdrop-blur-sm border border-grafito rounded-lg overflow-x-auto">
                 <table class="w-full text-left font-inter text-sm min-w-max">
-                    <thead class="bg-carbon/90 text-vela text-xs uppercase tracking-wider">
+                    <thead class="bg-carbon/90 text-red-800 text-xs uppercase tracking-wider">
                         <tr>
                             <th class="px-6 py-4 font-medium">Nombre de Google</th>
                             <th class="px-6 py-4 font-medium">Seudónimo (Público)</th>
@@ -336,14 +336,14 @@
                 <h2 class="font-cinzel text-2xl text-marfil uppercase tracking-widest flex items-center gap-2">
                     <span class="material-icons text-orange-500/80">local_fire_department</span> El Purgatorio de Historias
                 </h2>
-                <button onclick="mostrarInicio()" class="text-gray-400 hover:text-vela font-inter text-sm flex items-center gap-2 transition bg-carbon/80 px-3 py-1.5 rounded border border-grafito backdrop-blur-sm">
+                <button onclick="mostrarInicio()" class="text-gray-400 hover:text-red-800 font-inter text-sm flex items-center gap-2 transition bg-carbon/80 px-3 py-1.5 rounded border border-grafito backdrop-blur-sm">
                     <span class="material-icons text-sm">arrow_back</span> Regresar al Inicio
                 </button>
             </div>
             
             <div class="bg-grafito/30 backdrop-blur-sm border border-grafito rounded-lg overflow-x-auto">
                 <table class="w-full text-left font-inter text-sm min-w-max">
-                    <thead class="bg-carbon/90 text-vela text-xs uppercase tracking-wider">
+                    <thead class="bg-carbon/90 text-red-800 text-xs uppercase tracking-wider">
                         <tr>
                             <th class="px-6 py-4 font-medium">Título del Manuscrito</th>
                             <th class="px-6 py-4 font-medium">Autor</th>
@@ -491,8 +491,8 @@
 
                 if (esEscritor || esAdmin) {
                     opcionesHtml += `
-                        <button onclick="prepararNuevoRelato(); cerrarMenuLateral();" class="w-full bg-vela/10 hover:bg-vela/20 text-vela border border-vela/30 p-3 rounded-lg text-left font-inter text-sm font-medium flex items-center gap-3 transition">
-                            <span class="material-icons text-vela">edit</span> Escribir Relato
+                        <button onclick="prepararNuevoRelato(); cerrarMenuLateral();" class="w-full bg-vela/10 hover:bg-vela/20 text-red-800 border border-vela/30 p-3 rounded-lg text-left font-inter text-sm font-medium flex items-center gap-3 transition">
+                            <span class="material-icons text-red-800">edit</span> Escribir Relato
                         </button>
                     `;
                 }
@@ -511,7 +511,7 @@
                 if (!esEscritor && !esAdmin) {
                     opcionesHtml += `
                         <div class="p-4 bg-grafito/20 border border-grafito/50 rounded-lg text-center text-xs text-gray-400 font-inter">
-                            Estás registrado como <span class="text-vela font-bold">Lector</span>.
+                            Estás registrado como <span class="text-red-800 font-bold">Lector</span>.
                         </div>
                     `;
                 }
@@ -659,10 +659,10 @@
             if (btnEliminar) btnEliminar.classList.add('hidden');
 
             const panelTitulo = document.getElementById('escribir-titulo-panel');
-            if (panelTitulo) panelTitulo.innerHTML = '<span class="material-icons text-vela">history_edu</span> Redactar Manuscrito';
+            if (panelTitulo) panelTitulo.innerHTML = '<span class="material-icons text-red-800">history_edu</span> Redactar Manuscrito';
 
             const btnGuardarBot = document.getElementById('btn-guardar-relato');
-            if (btnGuardarBot) btnGuardarBot.innerHTML = '<span class="material-icons text-vela">history_edu</span> Sellar y Enviar al Purgatorio';
+            if (btnGuardarBot) btnGuardarBot.innerHTML = '<span class="material-icons text-red-800">history_edu</span> Sellar y Enviar al Purgatorio';
 
             const btnGuardarTop = document.getElementById('btn-guardar-top');
             if (btnGuardarTop) btnGuardarTop.innerHTML = '<span class="material-icons text-sm">save</span> Sellar';
@@ -721,10 +721,10 @@
             if (btnEliminar) btnEliminar.classList.remove('hidden');
 
             const panelTitulo = document.getElementById('escribir-titulo-panel');
-            if (panelTitulo) panelTitulo.innerHTML = '<span class="material-icons text-vela">edit</span> Modificar Manuscrito';
+            if (panelTitulo) panelTitulo.innerHTML = '<span class="material-icons text-red-800">edit</span> Modificar Manuscrito';
 
             const btnGuardarBot = document.getElementById('btn-guardar-relato');
-            if (btnGuardarBot) btnGuardarBot.innerHTML = '<span class="material-icons text-vela">update</span> Actualizar Manuscrito';
+            if (btnGuardarBot) btnGuardarBot.innerHTML = '<span class="material-icons text-red-800">update</span> Actualizar Manuscrito';
 
             const btnGuardarTop = document.getElementById('btn-guardar-top');
             if (btnGuardarTop) btnGuardarTop.innerHTML = '<span class="material-icons text-sm">update</span> Actualizar';
@@ -814,13 +814,13 @@
                             <div class="flex-1 w-full">
                                 <div class="flex items-center justify-between mb-4">
                                     <div class="flex items-center gap-3">
-                                        <span class="text-xs font-inter bg-vela/10 border border-vela/30 text-vela px-3 py-1 rounded flex items-center gap-1"><span class="material-icons text-xs">star</span> RELATO RECIENTE</span>
+                                        <span class="text-xs font-inter bg-vela/10 border border-vela/30 text-red-800 px-3 py-1 rounded flex items-center gap-1"><span class="material-icons text-xs">star</span> RELATO RECIENTE</span>
                                         <span class="text-xs text-gray-400 font-inter uppercase tracking-wider">${destacado.genero}</span>
                                         ${destacado.esAdulto ? '<span class="text-xs text-red-500 font-inter border border-red-500/30 bg-red-500/10 px-2 py-0.5 rounded flex items-center gap-1"><span class="material-icons text-[12px]">warning</span> +18</span>' : ''}
                                     </div>
-                                    ${esDuenoDestacado ? `<button onclick="event.stopPropagation(); prepararEdicionRelato('${destacado.id}')" class="text-vela hover:text-marfil text-xs bg-carbon/80 border border-vela/30 px-2.5 py-1 rounded flex items-center gap-1 transition z-20 cursor-pointer" title="Modificar Manuscrito"><span class="material-icons text-xs">edit</span> Editar</button>` : ''}
+                                    ${esDuenoDestacado ? `<button onclick="event.stopPropagation(); prepararEdicionRelato('${destacado.id}')" class="text-red-800 hover:text-marfil text-xs bg-carbon/80 border border-vela/30 px-2.5 py-1 rounded flex items-center gap-1 transition z-20 cursor-pointer" title="Modificar Manuscrito"><span class="material-icons text-xs">edit</span> Editar</button>` : ''}
                                 </div>
-                                <h2 class="font-cinzel text-3xl md:text-4xl text-marfil group-hover:text-vela transition mb-4 uppercase tracking-wide drop-shadow-lg">${destacado.titulo}</h2>
+                                <h2 class="font-cinzel text-3xl md:text-4xl text-marfil group-hover:text-red-800 transition mb-4 uppercase tracking-wide drop-shadow-lg">${destacado.titulo}</h2>
                                 <p class="text-lg text-gray-300 max-w-3xl mb-8 font-inter leading-relaxed line-clamp-2 drop-shadow-md">${destacado.contenido}</p>
                                 
                                 <div class="flex justify-between items-end border-t border-grafito/50 pt-4">
@@ -853,13 +853,13 @@
                                 ${thumbHtml}
                                 <div class="px-5 pt-3 pb-0">
                                     <div class="flex justify-between items-start mb-3">
-                                        <span class="text-xs font-inter border border-vela/20 text-vela/80 px-2 py-1 rounded uppercase tracking-wider">${relato.genero}</span>
+                                        <span class="text-xs font-inter border border-vela/20 text-red-800/80 px-2 py-1 rounded uppercase tracking-wider">${relato.genero}</span>
                                         <div class="flex items-center gap-2">
                                             ${relato.esAdulto ? '<span class="material-icons text-red-500/70 text-sm" title="Contenido +18">warning</span>' : ''}
-                                            ${esDuenoGrid ? `<button onclick="event.stopPropagation(); prepararEdicionRelato('${relato.id}')" class="text-vela hover:text-marfil text-xs bg-carbon/80 border border-vela/30 px-2 py-0.5 rounded flex items-center gap-1 transition z-20 cursor-pointer" title="Modificar Manuscrito"><span class="material-icons text-[12px]">edit</span></button>` : ''}
+                                            ${esDuenoGrid ? `<button onclick="event.stopPropagation(); prepararEdicionRelato('${relato.id}')" class="text-red-800 hover:text-marfil text-xs bg-carbon/80 border border-vela/30 px-2 py-0.5 rounded flex items-center gap-1 transition z-20 cursor-pointer" title="Modificar Manuscrito"><span class="material-icons text-[12px]">edit</span></button>` : ''}
                                         </div>
                                     </div>
-                                    <h4 class="font-cinzel text-lg text-marfil mb-2 uppercase group-hover:text-vela transition">${relato.titulo}</h4>
+                                    <h4 class="font-cinzel text-lg text-marfil mb-2 uppercase group-hover:text-red-800 transition">${relato.titulo}</h4>
                                     <p class="text-sm font-inter text-gray-400 line-clamp-3 mb-4">${relato.contenido}</p>
                                 </div>
                             </div>
@@ -871,7 +871,7 @@
                                 </div>
                                 <div class="flex justify-between items-center w-full">
                                     <span class="text-xs text-gray-400 font-inter">Por ${relato.autorNombre.split(' ')[0]}</span>
-                                    <span class="text-xs text-vela hover:text-marfil transition font-inter flex items-center gap-1">Leer <span class="material-icons text-xs">arrow_forward</span></span>
+                                    <span class="text-xs text-red-800 hover:text-marfil transition font-inter flex items-center gap-1">Leer <span class="material-icons text-xs">arrow_forward</span></span>
                                 </div>
                             </div>
                         </div>
@@ -1020,7 +1020,7 @@
                 console.error("Error al guardar el relato:", error);
                 alert('Las sombras impidieron guardar el relato. Revisa tu conexión.');
             } finally {
-                setBotonesGuardando(false, '<span class="material-icons text-vela">history_edu</span> Sellar y Enviar al Purgatorio', '<span class="material-icons text-sm">save</span> Sellar');
+                setBotonesGuardando(false, '<span class="material-icons text-red-800">history_edu</span> Sellar y Enviar al Purgatorio', '<span class="material-icons text-sm">save</span> Sellar');
             }
         };
 
@@ -1077,7 +1077,7 @@
                     tbody.innerHTML += `
                         <tr class="hover:bg-grafito/30 transition-colors border-b border-grafito/50 last:border-0 group">
                             <td class="px-6 py-4">
-                                <span class="text-marfil font-cinzel font-bold text-base group-hover:text-vela transition">${data.titulo}</span>
+                                <span class="text-marfil font-cinzel font-bold text-base group-hover:text-red-800 transition">${data.titulo}</span>
                             </td>
                             <td class="px-6 py-4 text-gray-400 italic">${data.autorNombre}</td>
                             <td class="px-6 py-4">${estadoHtml}</td>
@@ -1184,7 +1184,7 @@
                     tr.innerHTML = `
                         <td class="px-6 py-4 flex items-center gap-3">
                             <span class="text-marfil font-medium">${data.nombre}</span>
-                            ${isSelf ? '<span class="text-[10px] bg-vela/10 text-vela px-2 py-0.5 rounded border border-vela/30 uppercase tracking-wider">Tú</span>' : ''}
+                            ${isSelf ? '<span class="text-[10px] bg-vela/10 text-red-800 px-2 py-0.5 rounded border border-vela/30 uppercase tracking-wider">Tú</span>' : ''}
                             ${esSuperAdminTarget ? '<span class="text-[10px] bg-carmesi/20 text-carmesi px-2 py-0.5 rounded border border-carmesi/40 uppercase tracking-wider">SUPREMO</span>' : ''}
                         </td>
                         <td class="px-6 py-4">
@@ -1192,7 +1192,7 @@
                         </td>
                         <td class="px-6 py-4 text-gray-400">${data.email}</td>
                         <td class="px-6 py-4">
-                            <select onchange="cambiarRol('${uid}', this.value, this)" class="bg-carbon/80 border border-grafito/80 text-vela text-sm rounded px-3 py-1.5 focus:outline-none transition ${opacityClass}" ${selectDisabled}>
+                            <select onchange="cambiarRol('${uid}', this.value, this)" class="bg-carbon/80 border border-grafito/80 text-red-800 text-sm rounded px-3 py-1.5 focus:outline-none transition ${opacityClass}" ${selectDisabled}>
                                 <option value="${rolMostrado}" selected>${rolMostrado}</option>
                                 ${esSuperAdminTarget ? '' : opcionesHTML}
                             </select>
