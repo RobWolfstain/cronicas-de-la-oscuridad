@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crónicas de la Oscuridad</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=IM+Fell+English:ital@0;1&family=Uncial+Antiqua&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        carbon: '#0b0c10',
+                        grafito: '#1f2833',
+                        zinc: '#45a29e', 
+                        marfil: '#e6e3da',
+                        vela: '#d4af37',
+                        tinta: '#261a14',
+                        pergamino: '#e4d5b7',
+                        sepia: '#5c4033',
+                        carmesi: '#8b1c1c'
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        inter: ['Inter', 'sans-serif'],
+                        uncial: ['Uncial Antiqua', 'cursive'],
+                        fell: ['IM Fell English', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            position: relative;
+            background-color: #030508; 
+            color: #e6e3da; 
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(to bottom, rgba(3, 5, 8, 0.75), rgba(3, 5, 8, 0.9)),
+                url('./fondo-bosque.avif');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            filter: contrast(1.1) brightness(0.85);
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #030508; }
+        ::-webkit-scrollbar-thumb { background: #1f2833; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #d4af37; }
+        
+        .fondo-pergamino {
+            background-color: #e4d5b7;
+            background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
+            box-shadow: inset 0 0 80px rgba(92, 64, 51, 0.4), inset 0 0 30px rgba(92, 64, 51, 0.3), 5px 5px 20px rgba(0,0,0,0.8);
+            border: 1px solid #c2a67a;
+        }
+
+        .miniatura-manuscrito {
+            float: left;
+            margin-right: 2rem;
+            margin-bottom: 1rem;
+            border: 2px solid #5c4033;
+            box-shadow: 4px 4px 15px rgba(38, 26, 20, 0.5);
+            max-width: 40%;
+            border-radius: 3px 8px 4px 6px;
+            filter: sepia(0.3) contrast(1.1) brightness(0.9);
+        }
+
+        .file-pergamino::file-selector-button {
+            border: 1px solid #8b6f4e;
+            background: rgba(92, 64, 51, 0.1);
+            color: #5c4033;
+            padding: 0.5rem 1rem;
+            border-radius: 2px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="font-fell antialiased min-h-screen flex flex-col transition-colors duration-500 relative">
+
+    <!-- MODAL: REGISTRO DE SEUDÓNIMO -->
+    <div id="modal-seudonimo" class="hidden fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="relative w-full max-w-lg fondo-pergamino p-10 md:p-12 rounded-xl shadow-2xl border border-sepia animate-fade-in">
+            <h3 class="font-cinzel text-3xl text-carmesi font-bold text-center mb-4 uppercase tracking-widest drop-shadow-sm">Firma el Pacto</h3>
+            <p class="text-tinta font-fell text-xl text-center mb-8 leading-relaxed font-bold">
+                Todo viajero que se adentre en este grimorio debe elegir el nombre con el que será reconocido en la oscuridad. ¿Cuál es tu alias?
+            </p>
+            <form id="form-seudonimo" class="flex flex-col gap-6">
+                <input type="text" id="input-seudonimo" required placeholder="Tu seudónimo..." class="w-full bg-transparent border-b-2 border-sepia/50 p-2 text-carmesi font-cinzel font-bold text-2xl text-center focus:outline-none focus:border-carmesi transition placeholder-sepia/50">
+                <div class="flex justify-center mt-2">
+                    <button type="submit" class="bg-tinta hover:bg-black text-vela px-8 py-4 rounded transition font-cinzel font-bold tracking-widest text-lg shadow-lg border border-vela/30 flex justify-center items-center gap-2">
+                        <span class="material-icons text-vela">history_edu</span> Firmar en el Registro
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Navegación Superior Perfectamente Centrada y Responsiva -->
+    <nav class="border-b border-grafito/50 bg-carbon/95 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
+            
+            <!-- Izquierda en desktop: Perfil o Ingreso -->
+            <div class="w-full md:w-auto flex justify-between md:justify-start items-center">
+                <div id="user-info" class="hidden flex items-center gap-2 relative">
+                    <img id="user-avatar" src="" alt="Avatar" class="w-8 h-8 rounded-full border border-grafito shadow-sm cursor-pointer" onclick="document.getElementById('btn-logout').classList.toggle('hidden')">
+                    <div class="flex flex-col text-left">
+                        <span id="user-name" class="text-xs font-inter text-marfil font-medium"></span>
+                        <span id="user-role" class="text-[10px] text-vela font-inter">Lector</span>
+                    </div>
+                    <button id="btn-logout" class="hidden absolute top-10 left-0 bg-grafito border border-vela/30 text-xs text-red-400 hover:text-red-300 px-3 py-1.5 rounded shadow-lg transition z-50 whitespace-nowrap">Cerrar Sesión</button>
+                </div>
+                <button id="btn-login" class="bg-grafito hover:bg-zinc/20 text-marfil px-3 py-1.5 rounded transition border border-grafito text-xs font-inter">Ingresar con Google</button>
+            </div>
+
+            <!-- Centro: Título en Dos Renglones Absolutamente Centrado -->
+            <div class="flex items-center justify-center gap-2 cursor-pointer hover:text-marfil transition group text-center" onclick="mostrarInicio()">
+                <span class="material-icons text-vela text-2xl sm:text-3xl">candle</span>
+                <div class="flex flex-col leading-tight items-center">
+                    <h1 class="font-cinzel text-sm sm:text-base font-bold text-vela uppercase tracking-wider">Crónicas</h1>
+                    <span class="text-marfil font-cinzel text-[10px] sm:text-xs tracking-widest uppercase opacity-90">de la Oscuridad</span>
+                </div>
+            </div>
+
+            <!-- Derecha: Botones de Acción (Purgatorio, Configuración, Escribir) -->
+            <div class="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
+                <button id="btn-postular" class="hidden text-xs font-inter text-marfil border border-marfil/30 px-2.5 py-1.5 rounded hover:bg-marfil/10 transition flex items-center gap-1" onclick="postularEscritor()">
+                    <span class="material-icons text-sm">history_edu</span> Postularse
+                </button>
+                <button id="btn-purgatorio" class="hidden text-xs sm:text-sm font-inter text-vela transition flex items-center gap-1 hover:bg-grafito/50 px-2.5 py-1.5 rounded border border-transparent hover:border-grafito" onclick="mostrarPurgatorio()">
+                    <span class="material-icons text-xs text-orange-500/80">local_fire_department</span> Purgatorio
+                </button>
+                <button id="btn-usuarios" class="hidden text-xs sm:text-sm font-inter text-vela transition flex items-center gap-1 hover:bg-grafito/50 px-2.5 py-1.5 rounded border border-transparent hover:border-grafito" onclick="mostrarUsuarios()">
+                    <span class="material-icons text-xs">settings</span> Configuración
+                </button>
+                <button id="btn-escribir" class="hidden bg-vela/10 hover:bg-vela/20 text-vela border border-vela/30 px-3 py-1.5 rounded transition shadow-[0_0_10px_rgba(212,175,55,0.1)] flex items-center gap-1.5 text-xs sm:text-sm font-inter font-medium" onclick="prepararNuevoRelato()">
+                    <span class="material-icons text-xs">edit</span> Escribir Relato
+                </button>
+            </div>
+
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto w-full px-4 py-8 relative">
+        
+        <!-- PANTALLA PRINCIPAL: Feed -->
+        <div id="vista-feed" class="space-y-12 animate-fade-in">
+            <div id="relato-destacado-container">
+                <div class="bg-grafito/30 backdrop-blur-sm border border-grafito p-8 rounded-xl animate-pulse h-64 flex items-center justify-center">
+                    <span class="text-grafito material-icons text-4xl">hourglass_empty</span>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex justify-between items-end border-b border-grafito/50 pb-2 mb-6">
+                    <h3 class="font-cinzel text-xl text-marfil uppercase tracking-widest">Archivos Abiertos</h3>
+                    <span id="contador-manuscritos" class="text-xs text-gray-500 font-inter">...</span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="historias-grid">
+                </div>
+            </div>
+        </div>
+
+        <!-- PANTALLA SECUNDARIA: LECTOR (PERGAMINO) -->
+        <div id="vista-lector" class="hidden max-w-5xl mx-auto w-full pb-20 animate-fade-in mt-6 cursor-pointer">
+            <div class="flex justify-between items-center mb-10 border-b border-grafito pb-4 cursor-default">
+                <button onclick="mostrarInicio()" class="text-gray-400 hover:text-vela font-inter text-sm flex items-center gap-2 transition bg-carbon/80 px-3 py-1.5 rounded border border-grafito backdrop-blur-sm">
+                    <span class="material-icons text-sm">arrow_back</span> Regresar al Inicio
+                </button>
+                <div id="lector-acciones-admin" class="hidden">
+                    <button id="btn-editar-desde-lector" class="text-vela hover:text-marfil font-inter text-sm flex items-center gap-1 transition bg-carbon/80 px-3 py-1.5 rounded border border-vela/30">
+                        <span class="material-icons text-sm">edit</span> Editar Relato
+                    </button>
+                </div>
+            </div>
+            
+            <article id="lector-contenido" class="cursor-default relative w-full fondo-pergamino p-12 md:p-20 text-tinta text-[22px] leading-[2.2] text-justify font-fell flex flex-col min-h-[500px]" style="border-radius: 4px 18px 5px 22px;">
+                <div class="text-center mb-14 border-b border-sepia/30 pb-10">
+                    <span id="lector-categoria" class="text-sm font-cinzel font-bold text-carmesi tracking-[0.3em] uppercase mb-4 block">Categoría</span>
+                    <h1 id="lector-titulo" class="font-uncial text-5xl md:text-6xl text-sepia mb-6 uppercase leading-tight tracking-wide drop-shadow-sm">Título del Relato</h1>
+                    <p id="lector-autor" class="text-lg text-[#704d3d] font-fell italic border-t border-sepia/20 inline-block pt-3 px-8">Inscrito por Autor</p>
+                </div>
+                
+                <div class="relative overflow-hidden clear-both flex-grow">
+                    <img id="lector-imagen" src="" alt="Ilustración del relato" class="miniatura-manuscrito hidden">
+                    <div id="lector-texto">
+                    </div>
+                </div>
+
+                <div class="mt-16 pt-8 border-t border-sepia/30 flex justify-center gap-8 md:gap-12 select-none">
+                    <button class="group flex flex-col items-center gap-2 text-sepia/80 hover:text-sepia transition font-cinzel tracking-wider">
+                        <span class="material-icons text-3xl group-hover:scale-110 group-hover:-translate-y-1 transition duration-300">thumb_up</span>
+                        <span class="text-sm font-bold">Me Gusta</span>
+                    </button>
+                    <button class="group flex flex-col items-center gap-2 text-sepia/80 hover:text-carmesi transition font-cinzel tracking-wider">
+                        <span class="material-icons text-3xl group-hover:scale-110 group-hover:-translate-y-1 transition duration-300">favorite</span>
+                        <span class="text-sm font-bold">Me Encanta</span>
+                    </button>
+                    <button class="group flex flex-col items-center gap-2 text-sepia/80 hover:text-tinta transition font-cinzel tracking-wider">
+                        <span class="material-icons text-3xl group-hover:scale-110 group-hover:-translate-y-1 transition duration-300">thumb_down</span>
+                        <span class="text-sm font-bold">Rechazar</span>
+                    </button>
+                </div>
+            </article>
+        </div>
+
+        <!-- PANTALLA CREACIÓN / EDICIÓN: REDACTAR MANUSCRITO -->
+        <div id="vista-escribir" class="hidden max-w-4xl mx-auto w-full pb-20 animate-fade-in mt-6">
+            <div class="flex justify-between items-center mb-8 border-b border-grafito pb-4">
+                <h2 id="escribir-titulo-panel" class="font-cinzel text-2xl text-marfil uppercase tracking-widest flex items-center gap-2"><span class="material-icons text-vela">history_edu</span> Redactar Manuscrito</h2>
+                <div class="flex gap-4">
+                    <button onclick="mostrarInicio()" class="text-gray-400 hover:text-red-400 font-inter text-sm flex items-center gap-1 transition bg-carbon/80 px-3 py-1.5 rounded border border-grafito">
+                        <span class="material-icons text-sm">close</span> Descartar
+                    </button>
+                    <button type="submit" form="form-escribir" id="btn-guardar-top" class="bg-vela/10 hover:bg-vela/20 text-vela border border-vela/30 px-3 py-1.5 rounded transition flex items-center gap-2 font-inter text-sm font-medium shadow-[0_0_10px_rgba(212,175,55,0.1)] disabled:opacity-50">
+                        <span class="material-icons text-sm">save</span> Sellar
+                    </button>
+                </div>
+            </div>
+            
+            <form id="form-escribir" onsubmit="guardarRelato(event)" class="relative w-full fondo-pergamino p-10 md:p-14 space-y-10" style="border-radius: 12px 3px 25px 6px;">
+                <input type="hidden" id="input-relato-id" value="">
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-cinzel text-carmesi font-bold uppercase tracking-widest mb-2">Título del Relato</label>
+                        <input type="text" id="input-titulo" required placeholder="Ej. La sombra en el Umbral..." class="w-full bg-transparent border-b-2 border-sepia/30 p-2 text-tinta font-uncial text-3xl focus:outline-none focus:border-sepia transition placeholder-[#a68a61]/50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-cinzel text-carmesi font-bold uppercase tracking-widest mb-2">Categoría</label>
+                        <select id="select-genero" class="w-full bg-transparent border-b-2 border-sepia/30 p-3 text-tinta font-fell text-xl focus:outline-none focus:border-sepia transition appearance-none cursor-pointer font-bold">
+                            <option value="Misterios Reales" class="bg-pergamino font-inter text-sm">Misterios Reales</option>
+                            <option value="Leyendas Tradicionales" class="bg-pergamino font-inter text-sm">Leyendas Tradicionales</option>
+                            <option value="Casas Embrujadas" class="bg-pergamino font-inter text-sm">Casas Embrujadas</option>
+                            <option value="Mitos y Entidades" class="bg-pergamino font-inter text-sm">Mitos y Entidades</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="contenedor-selector-autor" class="border-y border-sepia/20 py-4">
+                    <label class="block text-sm font-cinzel text-carmesi font-bold uppercase tracking-widest mb-2">Inscrito por (Autor / Seudónimo)</label>
+                    <select id="select-autor-relato" class="w-full bg-transparent border-b-2 border-sepia/30 p-2 text-tinta font-fell text-xl focus:outline-none focus:border-sepia transition cursor-pointer font-bold">
+                    </select>
+                    <p class="text-xs text-sepia/80 font-inter mt-1">Como administrador, puedes elegir qué seudónimo firmará este manuscrito.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-y border-sepia/20 py-8">
+                    <div>
+                        <label class="block text-sm font-cinzel text-carmesi font-bold uppercase tracking-widest mb-3">Ilustración del Relato</label>
+                        <input type="file" id="input-imagen" accept="image/*" class="w-full bg-transparent text-tinta font-fell text-lg file-pergamino cursor-pointer">
+                    </div>
+                    <div class="flex items-center">
+                        <label class="flex items-center gap-3 cursor-pointer group p-3 bg-sepia/5 border border-sepia/20 rounded">
+                            <input type="checkbox" id="checkbox-adulto" class="w-6 h-6 accent-[#8b1c1c] border-sepia cursor-pointer transition">
+                            <span class="text-sm font-cinzel font-bold text-carmesi/80 group-hover:text-carmesi transition select-none uppercase tracking-wider flex items-center gap-2"><span class="material-icons text-[#8b1c1c] text-xl">warning</span> Contenido Fuerte (+18)</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-cinzel text-carmesi font-bold uppercase tracking-widest mb-4">El Manuscrito (Escribe aquí)</label>
+                    <textarea id="input-contenido" required rows="18" placeholder="La noche estaba inusualmente silenciosa..." class="w-full bg-transparent border-2 border-sepia/20 rounded-md p-8 text-tinta font-fell text-[22px] leading-loose focus:outline-none focus:border-sepia/60 transition resize-y placeholder-[#a68a61]/50"></textarea>
+                </div>
+
+                <div class="flex justify-center pt-6">
+                    <button type="submit" id="btn-guardar-relato" class="bg-tinta hover:bg-black text-vela px-12 py-5 rounded transition flex items-center gap-3 font-cinzel font-bold tracking-widest text-lg shadow-2xl disabled:opacity-50 border border-vela/30">
+                        <span class="material-icons text-vela">history_edu</span> Sellar y Enviar al Purgatorio
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div id="vista-usuarios" class="hidden animate-fade-in mt-6">
+            <div class="flex justify-between items-center mb-8 border-b border-grafito pb-4">
+                <h2 class="font-cinzel text-2xl text-marfil uppercase tracking-widest flex items-center gap-2"><span class="material-icons text-vela">settings</span> Configuración</h2>
+                <button onclick="mostrarInicio()" class="text-gray-400 hover:text-vela font-inter text-sm flex items-center gap-2 transition bg-carbon/80 px-3 py-1.5 rounded border border-grafito backdrop-blur-sm">
+                    <span class="material-icons text-sm">arrow_back</span> Regresar al Inicio
+                </button>
+            </div>
+            
+            <div class="bg-grafito/30 backdrop-blur-sm border border-grafito rounded-lg overflow-x-auto">
+                <table class="w-full text-left font-inter text-sm min-w-max">
+                    <thead class="bg-carbon/90 text-vela text-xs uppercase tracking-wider">
+                        <tr>
+                            <th class="px-6 py-4 font-medium">Nombre de Google</th>
+                            <th class="px-6 py-4 font-medium">Seudónimo (Público)</th>
+                            <th class="px-6 py-4 font-medium">Correo Electrónico</th>
+                            <th class="px-6 py-4 font-medium">Rol Asignado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-usuarios-body" class="divide-y divide-grafito/30 text-gray-300">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="vista-purgatorio" class="hidden animate-fade-in mt-6">
+            <div class="flex justify-between items-center mb-8 border-b border-grafito pb-4">
+                <h2 class="font-cinzel text-2xl text-marfil uppercase tracking-widest flex items-center gap-2">
+                    <span class="material-icons text-orange-500/80">local_fire_department</span> El Purgatorio de Historias
+                </h2>
+                <button onclick="mostrarInicio()" class="text-gray-400 hover:text-vela font-inter text-sm flex items-center gap-2 transition bg-carbon/80 px-3 py-1.5 rounded border border-grafito backdrop-blur-sm">
+                    <span class="material-icons text-sm">arrow_back</span> Regresar al Inicio
+                </button>
+            </div>
+            
+            <div class="bg-grafito/30 backdrop-blur-sm border border-grafito rounded-lg overflow-x-auto">
+                <table class="w-full text-left font-inter text-sm min-w-max">
+                    <thead class="bg-carbon/90 text-vela text-xs uppercase tracking-wider">
+                        <tr>
+                            <th class="px-6 py-4 font-medium">Título del Manuscrito</th>
+                            <th class="px-6 py-4 font-medium">Autor</th>
+                            <th class="px-6 py-4 font-medium">Estado actual</th>
+                            <th class="px-6 py-4 font-medium text-center">El Juicio (Acciones)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-purgatorio-body" class="divide-y divide-grafito/30 text-gray-300">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, getDocs, updateDoc, addDoc, deleteDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBGjvGUzY3g9nVuW48dNorAUiNPjGDnD_Q",
+            authDomain: "cronicas-de-la-oscuridad-85b0f.firebaseapp.com",
+            projectId: "cronicas-de-la-oscuridad-85b0f",
+            storageBucket: "cronicas-de-la-oscuridad-85b0f.appspot.com",
+            messagingSenderId: "936028153361",
+            appId: "1:936028153361:web:9974e681f76a3882f873b0"
+        };
+
+        const IMGBB_API_KEY = "171debea33738b0c8ca5561f42789f00";
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        const btnLogin = document.getElementById('btn-login');
+        const btnLogout = document.getElementById('btn-logout');
+        const userInfo = document.getElementById('user-info');
+        const userAvatar = document.getElementById('user-avatar');
+        const userName = document.getElementById('user-name');
+        const userRole = document.getElementById('user-role');
+        
+        const btnPurgatorio = document.getElementById('btn-purgatorio');
+        const btnUsuarios = document.getElementById('btn-usuarios');
+        const btnEscribir = document.getElementById('btn-escribir');
+        const btnPostular = document.getElementById('btn-postular');
+
+        let rolUsuarioActual = 'Super Administrador';
+        let seudonimoActual = 'Rob Wolfstain'; 
+        let relatosCargados = []; 
+        let relatoActualId = null; 
+        let relatoActualData = null; 
+
+        function solicitarSeudonimo(sugerencia) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('modal-seudonimo');
+                const input = document.getElementById('input-seudonimo');
+                const form = document.getElementById('form-seudonimo');
+                input.value = sugerencia;
+                modal.classList.remove('hidden');
+                form.onsubmit = (e) => {
+                    e.preventDefault();
+                    const valor = input.value.trim();
+                    if (valor) {
+                        modal.classList.add('hidden');
+                        resolve(valor);
+                    }
+                };
+            });
+        }
+
+        btnLogin.addEventListener('click', async () => {
+            try { await signInWithPopup(auth, provider); } 
+            catch (error) { console.error("Error:", error); }
+        });
+
+        btnLogout.addEventListener('click', () => {
+            signOut(auth);
+            document.getElementById('btn-logout').classList.add('hidden');
+        });
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                btnLogin.classList.add('hidden');
+                userInfo.classList.remove('hidden');
+                userAvatar.src = user.photoURL;
+
+                const userRef = doc(db, 'usuarios', user.uid);
+                const userSnap = await getDoc(userRef);
+                let userData;
+                
+                if (!userSnap.exists()) {
+                    const nombreSugerido = user.displayName.split(' ')[0];
+                    const nombreElegido = await solicitarSeudonimo(nombreSugerido);
+
+                    userData = {
+                        nombre: user.displayName,
+                        email: user.email,
+                        seudonimo: nombreElegido,
+                        rol: 'Super Administrador',
+                        solicitandoRol: false,
+                        fechaIngreso: new Date()
+                    };
+                    await setDoc(userRef, userData);
+                    rolUsuarioActual = 'Super Administrador';
+                    seudonimoActual = nombreElegido;
+                } else {
+                    userData = userSnap.data();
+                    rolUsuarioActual = userData.rol || 'Super Administrador';
+                    
+                    if (user.email && user.email.toLowerCase() === 'jesus.robledo.c@gmail.com') {
+                        rolUsuarioActual = 'Super Administrador';
+                        await updateDoc(userRef, { rol: 'Super Administrador' });
+                    }
+
+                    if (!userData.seudonimo) {
+                        const nombreSugerido = user.displayName.split(' ')[0];
+                        const nombreElegido = await solicitarSeudonimo(nombreSugerido);
+                        await updateDoc(userRef, { seudonimo: nombreElegido });
+                        seudonimoActual = nombreElegido;
+                    } else {
+                        seudonimoActual = userData.seudonimo;
+                    }
+                }
+
+                userName.textContent = seudonimoActual; 
+                userRole.textContent = rolUsuarioActual; 
+
+                const rolL = rolUsuarioActual.toLowerCase();
+                const esAdmin = rolL.includes('admin') || rolL.includes('super');
+                const esEscritor = rolL.includes('escritor') || esAdmin;
+
+                if (esAdmin) {
+                    btnPurgatorio.classList.remove('hidden');
+                    btnUsuarios.classList.remove('hidden');
+                    btnEscribir.classList.remove('hidden');
+                    btnPostular.classList.add('hidden');
+                } else if (esEscritor) {
+                    btnPurgatorio.classList.add('hidden');
+                    btnUsuarios.classList.add('hidden');
+                    btnEscribir.classList.remove('hidden');
+                    btnPostular.classList.add('hidden');
+                } else {
+                    btnPurgatorio.classList.add('hidden');
+                    btnUsuarios.classList.add('hidden');
+                    btnEscribir.classList.add('hidden');
+                    btnPostular.classList.remove('hidden');
+
+                    if (userData.solicitandoRol) {
+                        btnPostular.innerHTML = '<span class="material-icons text-sm">hourglass_empty</span> Petición en espera';
+                        btnPostular.disabled = true;
+                        btnPostular.classList.add('opacity-50', 'cursor-not-allowed');
+                    } else {
+                        btnPostular.innerHTML = '<span class="material-icons text-sm">history_edu</span> Postularse como Escritor';
+                        btnPostular.disabled = false;
+                        btnPostular.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }
+                }
+            } else {
+                btnLogin.classList.remove('hidden');
+                userInfo.classList.add('hidden');
+                btnPurgatorio.classList.add('hidden');
+                btnUsuarios.classList.add('hidden');
+                btnEscribir.classList.add('hidden');
+                btnPostular.classList.add('hidden');
+            }
+        });
+
+        window.postularEscritor = async () => {
+            const btn = document.getElementById('btn-postular');
+            btn.innerHTML = '<span class="material-icons text-sm animate-spin">refresh</span> Invocando...';
+            btn.disabled = true;
+            try {
+                await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { solicitandoRol: true });
+                btn.innerHTML = '<span class="material-icons text-sm">hourglass_empty</span> Petición en espera';
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                alert("Tu petición ha sido enviada a los Inquisidores del grimorio.");
+            } catch (error) {
+                console.error("Error al postularse:", error);
+                btn.innerHTML = '<span class="material-icons text-sm">history_edu</span> Postularse como Escritor';
+                btn.disabled = false;
+                alert("Error de conexión. Las sombras impiden enviar la solicitud.");
+            }
+        };
+
+        document.addEventListener('click', (e) => {
+            const vistaLector = document.getElementById('vista-lector');
+            const pergamino = document.getElementById('lector-contenido');
+            if (!vistaLector.classList.contains('hidden')) {
+                if (pergamino && !pergamino.contains(e.target) && !e.target.closest('button') && !e.target.closest('nav')) {
+                    mostrarInicio();
+                }
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (!document.getElementById('vista-lector').classList.contains('hidden')) {
+                    mostrarInicio();
+                } else if (!document.getElementById('vista-escribir').classList.contains('hidden')) {
+                    mostrarInicio();
+                }
+            }
+        });
+
+        function ocultarTodo() {
+            document.getElementById('vista-feed').classList.add('hidden');
+            document.getElementById('vista-lector').classList.add('hidden');
+            document.getElementById('vista-usuarios').classList.add('hidden');
+            document.getElementById('vista-escribir').classList.add('hidden');
+            document.getElementById('vista-purgatorio').classList.add('hidden');
+        }
+
+        window.mostrarInicio = () => {
+            ocultarTodo();
+            document.getElementById('vista-feed').classList.remove('hidden');
+            cargarRelatosInicio();
+        };
+
+        window.mostrarUsuarios = async () => {
+            ocultarTodo();
+            document.getElementById('vista-usuarios').classList.remove('hidden');
+            await cargarUsuarios();
+        };
+
+        async function llenarCatalogoSeudónimos(seudonimoSeleccionado) {
+            const selectAutor = document.getElementById('select-autor-relato');
+            selectAutor.innerHTML = '';
+            try {
+                const snapshot = await getDocs(collection(db, "usuarios"));
+                snapshot.forEach(docSnap => {
+                    const uData = docSnap.data();
+                    const alias = uData.seudonimo || uData.nombre.split(' ')[0];
+                    const option = document.createElement('option');
+                    option.value = alias;
+                    option.textContent = alias + (uData.email ? ` (${uData.email})` : '');
+                    if (alias === seudonimoSeleccionado) {
+                        option.selected = true;
+                    }
+                    selectAutor.appendChild(option);
+                });
+            } catch (err) {
+                console.error("Error al poblar seudónimos:", err);
+            }
+        }
+
+        window.prepararNuevoRelato = async () => {
+            relatoActualId = null;
+            relatoActualData = null;
+            document.getElementById('form-escribir').reset();
+            document.getElementById('input-relato-id').value = '';
+            document.getElementById('escribir-titulo-panel').innerHTML = '<span class="material-icons text-vela">history_edu</span> Redactar Manuscrito';
+            document.getElementById('btn-guardar-relato').innerHTML = '<span class="material-icons text-vela">history_edu</span> Sellar y Enviar al Purgatorio';
+            document.getElementById('btn-guardar-top').innerHTML = '<span class="material-icons text-sm">save</span> Sellar';
+            
+            await llenarCatalogoSeudónimos(seudonimoActual);
+            ocultarTodo();
+            document.getElementById('vista-escribir').classList.remove('hidden');
+        };
+
+        window.prepararEdicionRelato = async (id) => {
+            const relato = relatosCargados.find(r => r.id === id);
+            if (!relato) return;
+
+            relatoActualId = relato.id;
+            relatoActualData = relato;
+
+            document.getElementById('input-relato-id').value = relato.id;
+            document.getElementById('input-titulo').value = relato.titulo;
+            document.getElementById('select-genero').value = relato.genero;
+            document.getElementById('input-contenido').value = relato.contenido;
+            document.getElementById('checkbox-adulto').checked = relato.esAdulto || false;
+            document.getElementById('input-imagen').value = ''; 
+
+            document.getElementById('escribir-titulo-panel').innerHTML = '<span class="material-icons text-vela">edit</span> Modificar Manuscrito';
+            document.getElementById('btn-guardar-relato').innerHTML = '<span class="material-icons text-vela">update</span> Actualizar Manuscrito';
+            document.getElementById('btn-guardar-top').innerHTML = '<span class="material-icons text-sm">update</span> Actualizar';
+
+            await llenarCatalogoSeudónimos(relato.autorNombre);
+            ocultarTodo();
+            document.getElementById('vista-escribir').classList.remove('hidden');
+        };
+
+        window.mostrarPurgatorio = () => {
+            ocultarTodo();
+            document.getElementById('vista-purgatorio').classList.remove('hidden');
+            cargarPurgatorio();
+        };
+
+        window.registrarReaccion = (e, tipo) => {
+            e.stopPropagation(); 
+            const btn = e.currentTarget;
+            btn.classList.add('animate-pulse', 'scale-125');
+            setTimeout(() => btn.classList.remove('animate-pulse', 'scale-125'), 300);
+        };
+
+        window.cargarRelatosInicio = async () => {
+            const grid = document.getElementById('historias-grid');
+            const destacadoContainer = document.getElementById('relato-destacado-container');
+            const contador = document.getElementById('contador-manuscritos');
+            
+            try {
+                const q = query(collection(db, "relatos"), orderBy("fecha", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                relatosCargados = [];
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    if (data.estado === 'aprobado' || !data.estado) {
+                        relatosCargados.push({ id: doc.id, ...data });
+                    }
+                });
+
+                contador.textContent = `${relatosCargados.length} manuscrito${relatosCargados.length !== 1 ? 's' : ''}`;
+
+                if (relatosCargados.length === 0) {
+                    destacadoContainer.innerHTML = `
+                        <div class="bg-grafito/30 backdrop-blur-sm border border-grafito p-10 rounded-xl text-center animate-fade-in">
+                            <span class="material-icons text-5xl text-grafito mb-2">auto_stories</span>
+                            <h2 class="font-cinzel text-xl text-marfil">El grimorio está vacío</h2>
+                            <p class="text-sm text-gray-500 font-inter mt-2">Sé el primero en sellar un relato en la oscuridad.</p>
+                        </div>`;
+                    grid.innerHTML = '';
+                    return;
+                }
+
+                const destacado = relatosCargados[0];
+                const rolL = rolUsuarioActual.toLowerCase();
+                const esDuenoDestacado = auth.currentUser && (auth.currentUser.uid === destacado.autorId || rolL.includes('admin') || rolL.includes('super'));
+                
+                const bgImagen = destacado.portadaUrl ? `background-image: url('${destacado.portadaUrl}'); background-size: cover; background-position: center; opacity: 0.15;` : `background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); opacity: 0.1;`;
+                const imgDestacadaHtml = destacado.portadaUrl 
+                    ? `<img src="${destacado.portadaUrl}" alt="Portada" class="w-28 h-40 md:w-36 md:h-52 object-cover rounded-md border border-grafito/50 shadow-2xl shrink-0">` 
+                    : '';
+                
+                let htmlDestacado = `
+                    <div class="bg-gradient-to-br from-grafito/60 to-carbon/90 border border-grafito p-8 rounded-xl relative overflow-hidden group cursor-pointer backdrop-blur-[2px]" onclick="abrirRelato('${destacado.id}', event)">
+                        <div class="absolute inset-0 mix-blend-overlay transition duration-700 group-hover:scale-105 group-hover:opacity-40" style="${bgImagen}"></div>
+                        <div class="relative z-10 flex flex-col sm:flex-row gap-6 items-center sm:items-start">
+                            ${imgDestacadaHtml}
+                            <div class="flex-1 w-full">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-xs font-inter bg-vela/10 border border-vela/30 text-vela px-3 py-1 rounded flex items-center gap-1"><span class="material-icons text-xs">star</span> RELATO RECIENTE</span>
+                                        <span class="text-xs text-gray-400 font-inter uppercase tracking-wider">${destacado.genero}</span>
+                                        ${destacado.esAdulto ? '<span class="text-xs text-red-500 font-inter border border-red-500/30 bg-red-500/10 px-2 py-0.5 rounded flex items-center gap-1"><span class="material-icons text-[12px]">warning</span> +18</span>' : ''}
+                                    </div>
+                                    ${esDuenoDestacado ? `<button onclick="event.stopPropagation(); prepararEdicionRelato('${destacado.id}')" class="text-vela hover:text-marfil text-xs bg-carbon/80 border border-vela/30 px-2.5 py-1 rounded flex items-center gap-1 transition" title="Modificar Manuscrito"><span class="material-icons text-xs">edit</span> Editar</button>` : ''}
+                                </div>
+                                <h2 class="font-cinzel text-3xl md:text-4xl text-marfil group-hover:text-vela transition mb-4 uppercase tracking-wide drop-shadow-lg">${destacado.titulo}</h2>
+                                <p class="text-lg text-gray-300 max-w-3xl mb-8 font-inter leading-relaxed line-clamp-2 drop-shadow-md">${destacado.contenido}</p>
+                                
+                                <div class="flex justify-between items-end border-t border-grafito/50 pt-4">
+                                    <div>
+                                        <p class="text-sm text-marfil font-inter font-medium drop-shadow">${destacado.autorNombre}</p>
+                                    </div>
+                                    <div class="flex items-center gap-4 text-gray-400/80">
+                                        <button class="hover:text-sepia transition transform hover:scale-110 flex items-center gap-1" title="Me Gusta" onclick="registrarReaccion(event, 'like')"><span class="material-icons text-[18px]">thumb_up</span></button>
+                                        <button class="hover:text-carmesi transition transform hover:scale-110 flex items-center gap-1" title="Me Encanta" onclick="registrarReaccion(event, 'love')"><span class="material-icons text-[18px]">favorite</span></button>
+                                        <button class="hover:text-tinta transition transform hover:scale-110 flex items-center gap-1" title="Rechazar" onclick="registrarReaccion(event, 'dislike')"><span class="material-icons text-[18px]">thumb_down</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                destacadoContainer.innerHTML = htmlDestacado;
+
+                let htmlGrid = '';
+                for (let i = 1; i < relatosCargados.length; i++) {
+                    const relato = relatosCargados[i];
+                    const esDuenoGrid = auth.currentUser && (auth.currentUser.uid === relato.autorId || rolL.includes('admin') || rolL.includes('super'));
+                    const thumbHtml = relato.portadaUrl 
+                        ? `<img src="${relato.portadaUrl}" class="w-full h-32 object-cover rounded-t-md mb-3 border-b border-grafito/50 opacity-80 group-hover:opacity-100 transition duration-500">` 
+                        : '';
+
+                    htmlGrid += `
+                        <div class="bg-grafito/40 border border-grafito rounded-lg hover:border-vela/50 transition cursor-pointer flex flex-col justify-between group backdrop-blur-[2px]" onclick="abrirRelato('${relato.id}', event)">
+                            <div>
+                                ${thumbHtml}
+                                <div class="px-5 pt-3 pb-0">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <span class="text-xs font-inter border border-vela/20 text-vela/80 px-2 py-1 rounded uppercase tracking-wider">${relato.genero}</span>
+                                        <div class="flex items-center gap-2">
+                                            ${relato.esAdulto ? '<span class="material-icons text-red-500/70 text-sm" title="Contenido +18">warning</span>' : ''}
+                                            ${esDuenoGrid ? `<button onclick="event.stopPropagation(); prepararEdicionRelato('${relato.id}')" class="text-vela hover:text-marfil text-xs bg-carbon/80 border border-vela/30 px-2 py-0.5 rounded flex items-center gap-1 transition" title="Modificar Manuscrito"><span class="material-icons text-[12px]">edit</span></button>` : ''}
+                                        </div>
+                                    </div>
+                                    <h4 class="font-cinzel text-lg text-marfil mb-2 uppercase group-hover:text-vela transition">${relato.titulo}</h4>
+                                    <p class="text-sm font-inter text-gray-400 line-clamp-3 mb-4">${relato.contenido}</p>
+                                </div>
+                            </div>
+                            <div class="border-t border-grafito/50 p-4 mt-2 flex flex-col gap-3">
+                                <div class="flex items-center gap-4 text-gray-400/80">
+                                    <button class="hover:text-sepia transition transform hover:scale-110 flex items-center gap-1" title="Me Gusta" onclick="registrarReaccion(event, 'like')"><span class="material-icons text-[16px]">thumb_up</span></button>
+                                    <button class="hover:text-carmesi transition transform hover:scale-110 flex items-center gap-1" title="Me Encanta" onclick="registrarReaccion(event, 'love')"><span class="material-icons text-[16px]">favorite</span></button>
+                                    <button class="hover:text-tinta transition transform hover:scale-110 flex items-center gap-1" title="Rechazar" onclick="registrarReaccion(event, 'dislike')"><span class="material-icons text-[16px]">thumb_down</span></button>
+                                </div>
+                                <div class="flex justify-between items-center w-full">
+                                    <span class="text-xs text-gray-400 font-inter">Por ${relato.autorNombre.split(' ')[0]}</span>
+                                    <span class="text-xs text-vela hover:text-marfil transition font-inter flex items-center gap-1">Leer <span class="material-icons text-xs">arrow_forward</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                grid.innerHTML = htmlGrid;
+            } catch (error) {
+                console.error("Error al cargar los relatos:", error);
+                grid.innerHTML = '<p class="text-red-400 font-inter">Error al invocar los archivos.</p>';
+            }
+        };
+
+        window.abrirRelato = (id, event) => {
+            if (event) event.stopPropagation();
+            const relato = relatosCargados.find(r => r.id === id);
+            if (!relato) return;
+
+            document.getElementById('lector-categoria').textContent = relato.genero;
+            document.getElementById('lector-titulo').textContent = relato.titulo;
+            document.getElementById('lector-autor').textContent = `Inscrito por ${relato.autorNombre}`;
+            
+            const accionesAdminLector = document.getElementById('lector-acciones-admin');
+            const btnEditarLector = document.getElementById('btn-editar-desde-lector');
+            const rolL = rolUsuarioActual.toLowerCase();
+            const esDueno = auth.currentUser && (auth.currentUser.uid === relato.autorId || rolL.includes('admin') || rolL.includes('super'));
+
+            if (esDueno) {
+                accionesAdminLector.classList.remove('hidden');
+                btnEditarLector.onclick = () => prepararEdicionRelato(relato.id);
+            } else {
+                accionesAdminLector.classList.add('hidden');
+            }
+
+            const imgElement = document.getElementById('lector-imagen');
+            if (relato.portadaUrl) {
+                imgElement.src = relato.portadaUrl;
+                imgElement.classList.remove('hidden');
+            } else {
+                imgElement.src = '';
+                imgElement.classList.add('hidden');
+            }
+
+            const parrafos = relato.contenido.split('\n').filter(p => p.trim() !== '');
+            let htmlContenido = '';
+            
+            parrafos.forEach((p, index) => {
+                if (index === 0) {
+                    htmlContenido += `<p class="first-letter:text-[110px] first-letter:leading-[90px] first-letter:font-uncial first-letter:text-carmesi first-letter:float-left first-letter:mr-5 first-letter:mt-1 first-letter:font-normal first-letter:drop-shadow-sm">${p}</p>`;
+                } else {
+                    htmlContenido += `<p>${p}</p>`;
+                }
+            });
+            document.getElementById('lector-texto').innerHTML = htmlContenido;
+
+            ocultarTodo();
+            document.getElementById('vista-lector').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.guardarRelato = async (e) => {
+            e.preventDefault();
+            
+            const titulo = document.getElementById('input-titulo').value;
+            const genero = document.getElementById('select-genero').value;
+            const contenido = document.getElementById('input-contenido').value;
+            const esAdulto = document.getElementById('checkbox-adulto').checked;
+            const archivoImagen = document.getElementById('input-imagen').files[0];
+            const relatoIdInput = document.getElementById('input-relato-id').value;
+            
+            let autorFirma = seudonimoActual;
+            const selectAutor = document.getElementById('select-autor-relato');
+            if (!selectAutor.closest('div').classList.contains('hidden')) {
+                autorFirma = selectAutor.value;
+            }
+
+            const btnBottom = document.getElementById('btn-guardar-relato');
+            const btnTop = document.getElementById('btn-guardar-top');
+
+            const setBotonesGuardando = (estaGuardando, textoBottom, textoTop) => {
+                btnBottom.disabled = estaGuardando;
+                btnTop.disabled = estaGuardando;
+                if(textoBottom) btnBottom.innerHTML = textoBottom;
+                if(textoTop) btnTop.innerHTML = textoTop;
+            };
+
+            setBotonesGuardando(true, '<span class="material-icons text-sm animate-spin">refresh</span> Invocando tintero...', '<span class="material-icons text-sm animate-spin">refresh</span> Procesando...');
+
+            try {
+                let imageUrl = relatoActualData ? relatoActualData.portadaUrl : null;
+                if (archivoImagen) {
+                    setBotonesGuardando(true, '<span class="material-icons text-sm animate-spin">cloud_upload</span> Revelando ilustración...', '<span class="material-icons text-sm animate-spin">cloud_upload</span> Subiendo...');
+                    const formData = new FormData();
+                    formData.append('image', archivoImagen);
+                    const imgbbResponse = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
+                    const imgbbData = await imgbbResponse.json();
+                    
+                    if (imgbbData.success) { imageUrl = imgbbData.data.url; } 
+                    else { throw new Error("ImgBB rechazó la imagen."); }
+                }
+
+                setBotonesGuardando(true, '<span class="material-icons text-sm animate-spin">refresh</span> Sellando con cera...', '<span class="material-icons text-sm animate-spin">refresh</span> Sellando...');
+
+                const rolL = rolUsuarioActual.toLowerCase();
+
+                if (relatoIdInput) {
+                    await updateDoc(doc(db, 'relatos', relatoIdInput), {
+                        titulo: titulo,
+                        genero: genero,
+                        contenido: contenido,
+                        esAdulto: esAdulto,
+                        portadaUrl: imageUrl,
+                        autorNombre: autorFirma 
+                    });
+                    alert('El manuscrito ha sido actualizado con éxito.');
+                } else {
+                    const estadoInicial = (rolL.includes('admin') || rolL.includes('super')) ? 'aprobado' : 'pendiente';
+
+                    await addDoc(collection(db, 'relatos'), {
+                        titulo: titulo,
+                        genero: genero,
+                        contenido: contenido,
+                        esAdulto: esAdulto,
+                        portadaUrl: imageUrl,
+                        autorId: auth.currentUser.uid,
+                        autorNombre: autorFirma, 
+                        fecha: serverTimestamp(),
+                        vistas: 0,
+                        estado: estadoInicial
+                    });
+                    
+                    if (estadoInicial === 'pendiente') {
+                        alert('El manuscrito ha sido enviado al Purgatorio. Los Inquisidores decidirán su destino.');
+                    } else {
+                        alert('El manuscrito ha sido autorizado e inscrito en el grimorio con éxito.');
+                    }
+                }
+                
+                document.getElementById('form-escribir').reset();
+                relatoActualId = null;
+                relatoActualData = null;
+                mostrarInicio(); 
+                
+            } catch (error) {
+                console.error("Error al guardar el relato:", error);
+                alert('Las sombras impidieron guardar el relato. Revisa tu conexión.');
+            } finally {
+                setBotonesGuardando(false, '<span class="material-icons text-vela">history_edu</span> Sellar y Enviar al Purgatorio', '<span class="material-icons text-sm">save</span> Sellar');
+            }
+        };
+
+        window.cargarPurgatorio = async () => {
+            const tbody = document.getElementById('tabla-purgatorio-body');
+            tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-8 text-center text-gray-500 animate-pulse">Invocando las almas en pena...</td></tr>';
+            try {
+                const q = query(collection(db, "relatos"), orderBy("fecha", "desc"));
+                const querySnapshot = await getDocs(q);
+                tbody.innerHTML = ''; 
+
+                if (querySnapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-8 text-center text-gray-500 font-inter">El Purgatorio está vacío. No hay relatos esperando juicio.</td></tr>';
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const rid = docSnap.id;
+                    const estado = data.estado || 'aprobado'; 
+                    
+                    let estadoHtml = estado === 'pendiente' 
+                        ? `<span class="text-orange-400 bg-orange-400/10 border border-orange-400/30 px-2 py-1 rounded text-xs uppercase tracking-wider font-medium flex items-center w-fit gap-1"><span class="material-icons text-[14px]">hourglass_empty</span> Aguardando Juicio</span>`
+                        : `<span class="text-zinc bg-zinc/10 border border-zinc/30 px-2 py-1 rounded text-xs uppercase tracking-wider font-medium flex items-center w-fit gap-1"><span class="material-icons text-[14px]">verified</span> Autorizado</span>`;
+
+                    let accionesHtml = `
+                        <div class="flex items-center justify-center gap-3">
+                            <button onclick="leerDesdePurgatorio('${rid}', event)" class="text-gray-400 hover:text-marfil transition transform hover:scale-110" title="Inspeccionar Relato">
+                                <span class="material-icons text-[20px]">visibility</span>
+                            </button>
+                    `;
+
+                    if (estado === 'pendiente') {
+                        accionesHtml += `
+                            <button onclick="juzgarRelato('${rid}', 'aprobado', this)" class="text-green-500/70 hover:text-green-400 transition transform hover:scale-110" title="Aprobar y Publicar en el Grimorio">
+                                <span class="material-icons text-[20px]">check_circle</span>
+                            </button>
+                        `;
+                    } else {
+                        accionesHtml += `
+                            <button onclick="juzgarRelato('${rid}', 'pendiente', this)" class="text-orange-500/70 hover:text-orange-400 transition transform hover:scale-110" title="Revocar autorización y devolver al Purgatorio">
+                                <span class="material-icons text-[20px]">remove_circle_outline</span>
+                            </button>
+                        `;
+                    }
+
+                    accionesHtml += `
+                            <button onclick="destruirRelato('${rid}', this)" class="text-red-500/70 hover:text-red-500 transition transform hover:scale-110" title="Destruir para siempre">
+                                <span class="material-icons text-[20px]">delete_forever</span>
+                            </button>
+                        </div>
+                    `;
+
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-grafito/30 transition-colors border-b border-grafito/50 last:border-0 group">
+                            <td class="px-6 py-4">
+                                <span class="text-marfil font-cinzel font-bold text-base group-hover:text-vela transition">${data.titulo}</span>
+                            </td>
+                            <td class="px-6 py-4 text-gray-400 italic">${data.autorNombre}</td>
+                            <td class="px-6 py-4">${estadoHtml}</td>
+                            <td class="px-6 py-4">${accionesHtml}</td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error("Error al cargar el purgatorio:", error);
+                tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-red-400">Error al invocar los registros del Purgatorio.</td></tr>';
+            }
+        };
+
+        window.leerDesdePurgatorio = async (id, event) => {
+            if (event) event.stopPropagation();
+            try {
+                const docSnap = await getDoc(doc(db, "relatos", id));
+                if(docSnap.exists()){
+                    const relato = {id: docSnap.id, ...docSnap.data()};
+                    const index = relatosCargados.findIndex(r => r.id === id);
+                    if(index === -1) relatosCargados.push(relato);
+                    
+                    abrirRelato(id, event);
+                }
+            } catch (e) {
+                console.error("Error al leer desde Purgatorio:", e);
+                alert("Las páginas de este manuscrito están pegadas.");
+            }
+        };
+
+        window.juzgarRelato = async (id, nuevoEstado, btnElement) => {
+            const tr = btnElement.closest('tr');
+            tr.classList.add('opacity-50', 'pointer-events-none');
+            try {
+                await updateDoc(doc(db, "relatos", id), { estado: nuevoEstado });
+                cargarPurgatorio(); 
+            } catch (error) {
+                console.error("Error al juzgar:", error);
+                alert("Las sombras bloquearon tu veredicto.");
+                tr.classList.remove('opacity-50', 'pointer-events-none');
+            }
+        };
+
+        window.destruirRelato = async (id, btnElement) => {
+            const confirmacion = confirm("¿Estás seguro de que deseas destruir esta historia para siempre? Las llamas no devuelven lo que consumen.");
+            if(!confirmacion) return;
+            
+            const tr = btnElement.closest('tr');
+            tr.classList.add('opacity-50', 'pointer-events-none');
+            try {
+                await deleteDoc(doc(db, "relatos", id));
+                cargarPurgatorio(); 
+            } catch(error) {
+                console.error("Error al destruir:", error);
+                alert("El relato se resiste a la destrucción.");
+                tr.classList.remove('opacity-50', 'pointer-events-none');
+            }
+        };
+
+        window.cargarUsuarios = async () => {
+            const tbody = document.getElementById('tabla-usuarios-body');
+            tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-8 text-center text-gray-500 font-inter animate-pulse">Consultando el archivo de almas...</td></tr>';
+            try {
+                const querySnapshot = await getDocs(collection(db, "usuarios"));
+                tbody.innerHTML = ''; 
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const uid = docSnap.id;
+                    const isSelf = auth.currentUser.uid === uid;
+                    const rolL = rolUsuarioActual.toLowerCase();
+                    
+                    let selectDisabled = '';
+                    let opacityClass = 'cursor-pointer hover:border-vela/50 focus:border-vela';
+                    
+                    if (isSelf) {
+                        selectDisabled = 'disabled title="No puedes cambiar tu propio rol"';
+                        opacityClass = 'opacity-50 cursor-not-allowed';
+                    }
+                    
+                    let opcionesHTML = `
+                        <option value="Lector" ${data.rol === 'Lector' ? 'selected' : ''}>Lector</option>
+                        <option value="Escritor" ${data.rol === 'Escritor' ? 'selected' : ''}>Escritor</option>
+                        <option value="Administrador" ${data.rol === 'Administrador' ? 'selected' : ''}>Administrador</option>
+                        <option value="Super Administrador" ${data.rol === 'Super Administrador' ? 'selected' : ''}>Super Administrador</option>
+                    `;
+
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-grafito/30 transition-colors border-b border-grafito/50 last:border-0';
+                    tr.innerHTML = `
+                        <td class="px-6 py-4 flex items-center gap-3">
+                            <span class="text-marfil font-medium">${data.nombre}</span>
+                            ${isSelf ? '<span class="text-[10px] bg-vela/10 text-vela px-2 py-0.5 rounded border border-vela/30 uppercase tracking-wider">Tú</span>' : ''}
+                        </td>
+                        <td class="px-6 py-4">
+                            <input type="text" value="${data.seudonimo || data.nombre.split(' ')[0]}" onchange="cambiarSeudonimo('${uid}', this.value, this)" class="bg-carbon/80 border border-grafito/80 text-marfil text-sm rounded px-3 py-1.5 focus:outline-none focus:border-vela transition w-full" ${selectDisabled}>
+                        </td>
+                        <td class="px-6 py-4 text-gray-400">${data.email}</td>
+                        <td class="px-6 py-4">
+                            <select onchange="cambiarRol('${uid}', this.value, this)" class="bg-carbon/80 border border-grafito/80 text-vela text-sm rounded px-3 py-1.5 focus:outline-none transition ${opacityClass}" ${selectDisabled}>
+                                ${opcionesHTML}
+                            </select>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error("Error al cargar usuarios:", error);
+                tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-red-400">Error al cargar la base de datos.</td></tr>';
+            }
+        };
+
+        window.cambiarRol = async (uid, nuevoRol, selectElement) => {
+            selectElement.classList.add('animate-pulse'); 
+            try {
+                await updateDoc(doc(db, "usuarios", uid), { rol: nuevoRol });
+                selectElement.classList.remove('animate-pulse');
+                const originalBg = selectElement.style.backgroundColor;
+                selectElement.style.backgroundColor = 'rgba(212, 175, 55, 0.2)'; 
+                setTimeout(() => {
+                    selectElement.style.backgroundColor = originalBg;
+                    cargarUsuarios(); 
+                }, 500);
+            } catch (error) {
+                console.error("Error al actualizar rol:", error);
+                alert('Hubo un error al actualizar el nivel de acceso.');
+                selectElement.classList.remove('animate-pulse');
+            }
+        };
+
+        window.cambiarSeudonimo = async (uid, nuevoSeudonimo, inputElement) => {
+            inputElement.classList.add('animate-pulse'); 
+            try {
+                await updateDoc(doc(db, "usuarios", uid), { seudonimo: nuevoSeudonimo });
+                inputElement.classList.remove('animate-pulse');
+                const originalBorder = inputElement.style.borderColor;
+                inputElement.style.borderColor = '#d4af37'; 
+                setTimeout(() => inputElement.style.borderColor = originalBorder, 1000);
+                
+                if (uid === auth.currentUser.uid) {
+                    seudonimoActual = nuevoSeudonimo;
+                    document.getElementById('user-name').textContent = nuevoSeudonimo;
+                }
+            } catch (error) {
+                console.error("Error al actualizar seudónimo:", error);
+                alert('Hubo un error al actualizar el seudónimo.');
+                inputElement.classList.remove('animate-pulse');
+            }
+        };
+
+        cargarRelatosInicio();
+
+    </script>
+</body>
+</html>

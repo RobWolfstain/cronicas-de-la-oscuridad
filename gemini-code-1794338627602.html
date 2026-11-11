@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crónicas de la Oscuridad</title>
+    <!-- Tailwind CSS para los estilos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fuentes de Google: Cinzel para títulos, Lora para lectura, Inter para menús -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        carbon: '#0b0c10',
+                        grafito: '#1f2833',
+                        zinc: '#45a29e', // muted for borders
+                        marfil: '#e6e3da',
+                        vela: '#d4af37' // warm amber/gold
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        lora: ['Lora', 'serif'],
+                        inter: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0b0c10; color: #e6e3da; }
+        .modo-vela { background-color: #1a1612; color: #d0bda5; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0b0c10; }
+        ::-webkit-scrollbar-thumb { background: #1f2833; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #d4af37; }
+    </style>
+</head>
+<body class="font-lora antialiased min-h-screen flex flex-col transition-colors duration-500">
+
+    <!-- Navegación Superior -->
+    <nav class="border-b border-grafito/50 bg-carbon/90 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="font-cinzel text-2xl font-bold text-vela cursor-pointer hover:text-marfil transition" onclick="mostrarInicio()">Crónicas de la Oscuridad</h1>
+            <div class="flex items-center gap-4">
+                <!-- Botones ocultos que solo verán Administradores/Moderadores -->
+                <button id="btn-curaduria" class="hidden text-sm font-inter hover:text-vela transition">Curaduría</button>
+                <button id="btn-usuarios" class="hidden text-sm font-inter hover:text-vela transition">Usuarios</button>
+                
+                <!-- Botón de escritura para usuarios logueados -->
+                <button id="btn-escribir" class="hidden bg-grafito hover:bg-zinc/20 text-marfil px-4 py-2 rounded transition border border-grafito text-sm font-inter">Escribir Relato</button>
+                
+                <!-- Perfil de Usuario -->
+                <div id="user-info" class="hidden flex items-center gap-3">
+                    <img id="user-avatar" src="" alt="Avatar" class="w-8 h-8 rounded-full border border-vela shadow-sm">
+                    <span id="user-name" class="text-sm font-inter text-marfil"></span>
+                    <button id="btn-logout" class="text-xs text-gray-400 hover:text-red-400 transition">Salir</button>
+                </div>
+                
+                <!-- Botón de Iniciar Sesión (por defecto) -->
+                <button id="btn-login" class="bg-vela/10 hover:bg-vela/20 text-vela border border-vela/30 px-4 py-2 rounded transition text-sm font-inter shadow-[0_0_10px_rgba(212,175,55,0.1)]">Ingresar con Google</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenedor de la Aplicación -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto w-full px-4 py-8">
+        
+        <!-- PANTALLA PRINCIPAL: Feed de Historias -->
+        <div id="vista-feed" class="space-y-8 animate-fade-in">
+            <div class="flex gap-2 overflow-x-auto pb-2 font-inter text-sm">
+                <button class="bg-grafito px-4 py-1 rounded-full border border-vela/30 text-vela">Todas</button>
+                <button class="bg-carbon px-4 py-1 rounded-full border border-grafito hover:border-vela/30 text-gray-300 transition">Leyendas de México</button>
+                <button class="bg-carbon px-4 py-1 rounded-full border border-grafito hover:border-vela/30 text-gray-300 transition">Casas Embrujadas</button>
+                <button class="bg-carbon px-4 py-1 rounded-full border border-grafito hover:border-vela/30 text-gray-300 transition">Mitos y Entidades</button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="historias-grid">
+                <!-- Tarjeta de Ejemplo (Esto se llenará con Firestore después) -->
+                <div class="bg-grafito/40 border border-grafito p-5 rounded-lg hover:border-vela/50 transition cursor-pointer group" onclick="mostrarLector()">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-inter bg-red-900/30 text-red-400 px-2 py-1 rounded">Leyendas</span>
+                        <span class="text-xs text-gray-500 font-inter">5 min de lectura</span>
+                    </div>
+                    <h2 class="font-cinzel text-xl text-marfil group-hover:text-vela transition mb-2">El Pacto del Camino Real</h2>
+                    <p class="text-sm text-gray-400 line-clamp-3">Se dice que en la carretera antigua hacia el norte, aquellos que viajan solos después de la medianoche encuentran a un charro que no busca dinero, sino un favor...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANTALLA SECUNDARIA: Modo Lector Inmersivo -->
+        <div id="vista-lector" class="hidden max-w-3xl mx-auto w-full pb-20 animate-fade-in">
+            <div class="flex justify-between items-center mb-8 border-b border-grafito pb-4">
+                <button onclick="mostrarInicio()" class="text-gray-400 hover:text-vela font-inter text-sm flex items-center gap-2 transition">
+                    <span>← Volver al archivo</span>
+                </button>
+                <div class="flex gap-4 font-inter text-sm items-center">
+                    <button id="btn-vela-toggle" class="text-vela hover:text-marfil transition border border-vela/30 px-3 py-1 rounded bg-vela/5 shadow-sm">Modo Luz de Vela</button>
+                </div>
+            </div>
+            <article id="lector-contenido" class="text-lg leading-relaxed space-y-6">
+                <h1 class="font-cinzel text-4xl text-vela mb-6 text-center">El Pacto del Camino Real</h1>
+                <p>Era una noche cerrada, de esas en las que la luna se niega a asomarse por miedo a lo que camina en la tierra. Don Julián apretaba el volante de su camioneta vieja; el frío de la sierra parecía filtrarse por los cristales empañados.</p>
+                <p>De pronto, en medio de la neblina, vio una figura a caballo. No era un jinete común. Su traje era de un negro tan profundo que parecía un agujero en la noche misma, adornado con botonaduras de plata que brillaban sin luz alguna.</p>
+                <!-- Más contenido iría aquí -->
+            </article>
+        </div>
+    </main>
+
+    <!-- ==========================================
+         LÓGICA Y CONEXIÓN CON FIREBASE
+         ========================================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // ==============================================================================
+        // ⚠️ IMPORTANTE: PEGA AQUÍ TU "const firebaseConfig = { ... };"
+        // Borra este bloque de abajo y pega el tuyo exacto.
+        // ==============================================================================
+        const firebaseConfig = {
+            apiKey: "PEGA_TU_API_KEY_AQUI",
+            authDomain: "cronicas-de-la-oscuridad-XXXX.firebaseapp.com",
+            projectId: "cronicas-de-la-oscuridad-XXXX",
+            storageBucket: "cronicas-de-la-oscuridad-XXXX.firebasestorage.app",
+            messagingSenderId: "NUMERO_SENDER",
+            appId: "APP_ID_LARGO"
+        };
+        // ==============================================================================
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // Capturar elementos del diseño
+        const btnLogin = document.getElementById('btn-login');
+        const btnLogout = document.getElementById('btn-logout');
+        const userInfo = document.getElementById('user-info');
+        const userAvatar = document.getElementById('user-avatar');
+        const userName = document.getElementById('user-name');
+        
+        const btnCuraduria = document.getElementById('btn-curaduria');
+        const btnUsuarios = document.getElementById('btn-usuarios');
+        const btnEscribir = document.getElementById('btn-escribir');
+
+        // Función de Iniciar Sesión
+        btnLogin.addEventListener('click', async () => {
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                console.error("Error al iniciar sesión:", error);
+            }
+        });
+
+        // Función de Cerrar Sesión
+        btnLogout.addEventListener('click', () => signOut(auth));
+
+        // Escuchar cambios: cuando el usuario entra o sale
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // Usuario entró correctamente
+                btnLogin.classList.add('hidden');
+                userInfo.classList.remove('hidden');
+                btnEscribir.classList.remove('hidden'); // Puede escribir
+                
+                userAvatar.src = user.photoURL;
+                userName.textContent = user.displayName.split(' ')[0]; // Solo el primer nombre
+
+                // Validar qué nivel de acceso (rol) tiene en la Base de Datos
+                const userRef = doc(db, 'usuarios', user.uid);
+                const userSnap = await getDoc(userRef);
+                
+                let rol = 'Lector';
+                if (!userSnap.exists()) {
+                    // Si es nuevo, lo guardamos como Lector
+                    await setDoc(userRef, {
+                        nombre: user.displayName,
+                        email: user.email,
+                        rol: 'Lector',
+                        fechaIngreso: new Date()
+                    });
+                } else {
+                    rol = userSnap.data().rol;
+                }
+
+                // Mostrar paneles secretos solo a los dueños
+                if (rol === 'Administrador' || rol === 'Moderador') {
+                    btnCuraduria.classList.remove('hidden');
+                    btnUsuarios.classList.remove('hidden');
+                } else {
+                    btnCuraduria.classList.add('hidden');
+                    btnUsuarios.classList.add('hidden');
+                }
+            } else {
+                // Nadie ha iniciado sesión
+                btnLogin.classList.remove('hidden');
+                userInfo.classList.add('hidden');
+                btnCuraduria.classList.add('hidden');
+                btnUsuarios.classList.add('hidden');
+                btnEscribir.classList.add('hidden');
+            }
+        });
+
+        // Funciones visuales (Las agregamos a window para usarlas en los botones onclick)
+        window.mostrarInicio = () => {
+            document.getElementById('vista-lector').classList.add('hidden');
+            document.getElementById('vista-feed').classList.remove('hidden');
+        };
+
+        window.mostrarLector = () => {
+            document.getElementById('vista-feed').classList.add('hidden');
+            document.getElementById('vista-lector').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Subir al inicio del texto
+        };
+
+        // Activar el modo "Luz de Vela"
+        document.getElementById('btn-vela-toggle').addEventListener('click', (e) => {
+            document.body.classList.toggle('modo-vela');
+            if (document.body.classList.contains('modo-vela')) {
+                e.target.textContent = "Apagar Vela";
+                e.target.classList.replace('text-vela', 'text-marfil');
+            } else {
+                e.target.textContent = "Modo Luz de Vela";
+                e.target.classList.replace('text-marfil', 'text-vela');
+            }
+        });
+    </script>
+</body>
+</html>
